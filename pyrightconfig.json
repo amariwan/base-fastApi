@@ -1,0 +1,18 @@
+{
+    "typeCheckingMode": "basic",
+    "include": [
+        "src"
+    ],
+    "exclude": [
+        "tests"
+    ],
+    "executionEnvironments": [
+        {
+            "root": "src",
+            "extraPaths": [
+                "src"
+            ]
+        }
+    ],
+    "reportMissingTypeStubs": false
+}
