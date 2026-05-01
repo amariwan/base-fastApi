@@ -38,7 +38,7 @@ def test_run_service_shutdown_uses_lifo_hook_order() -> None:
 
     runtime = RuntimeService(
         registration=ServiceRegistration(
-            name="docgen-test",
+            name="service-test",
             shutdown_hooks=[hook_one, hook_two],
         ),
         startup_results=["startup_one", "startup_two"],

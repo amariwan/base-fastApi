@@ -18,31 +18,31 @@ from fastapi import APIRouter, FastAPI
 
 def test_discover_service_module_names_returns_sorted_service_integrations(tmp_path: Path) -> None:
     services_dir = tmp_path / "services"
-    (services_dir / "docgen").mkdir(parents=True)
-    (services_dir / "docgen" / "integration.py").write_text("", encoding="utf-8")
-    (services_dir / "docmanager").mkdir(parents=True)
-    (services_dir / "docmanager" / "integration.py").write_text("", encoding="utf-8")
+    (services_dir / "servicea").mkdir(parents=True)
+    (services_dir / "servicea" / "integration.py").write_text("", encoding="utf-8")
+    (services_dir / "serviceb").mkdir(parents=True)
+    (services_dir / "serviceb" / "integration.py").write_text("", encoding="utf-8")
     (services_dir / "__pycache__").mkdir(parents=True)
 
     modules = discover_service_module_names(services_dir)
     assert modules == [
-        "app.services.docgen.integration",
-        "app.services.docmanager.integration",
+        "app.services.servicea.integration",
+        "app.services.serviceb.integration",
     ]
 
 
 def test_get_service_registrations_returns_loaded_services(monkeypatch: pytest.MonkeyPatch) -> None:
     router = APIRouter()
-    monkeypatch.setattr(loader, "discover_service_module_names", lambda: ["app.services.docmanager.integration"])
+    monkeypatch.setattr(loader, "discover_service_module_names", lambda: ["app.services.serviceb.integration"])
     monkeypatch.setattr(
         loader,
         "load_service_registrations",
-        lambda _: [ServiceRegistration(name="docmanager", routers=[router])],
+        lambda _: [ServiceRegistration(name="serviceb", routers=[router])],
     )
 
     registrations = get_service_registrations()
     assert len(registrations) == 1
-    assert registrations[0].name == "docmanager"
+    assert registrations[0].name == "serviceb"
     assert registrations[0].routers == [router]
 
 
@@ -56,30 +56,30 @@ def test_get_service_registrations_raises_when_no_modules_found(monkeypatch: pyt
 def test_get_service_registrations_raises_when_router_list_is_empty(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setattr(loader, "discover_service_module_names", lambda: ["app.services.docmanager.integration"])
+    monkeypatch.setattr(loader, "discover_service_module_names", lambda: ["app.services.serviceb.integration"])
     monkeypatch.setattr(
         loader,
         "load_service_registrations",
-        lambda _: [ServiceRegistration(name="docmanager", routers=[])],
+        lambda _: [ServiceRegistration(name="serviceb", routers=[])],
     )
     with pytest.raises(RuntimeError) as exc_info:
         get_service_registrations()
     assert str(exc_info.value) == msg.get(
         MessageKeys.EXTENSIONS_NO_ROUTERS_CONFIGURED,
-        service="docmanager",
+        service="serviceb",
     )
 
 
 def test_get_service_registrations_raises_when_no_service_loaded(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setattr(loader, "discover_service_module_names", lambda: ["app.services.docmanager.integration"])
+    monkeypatch.setattr(loader, "discover_service_module_names", lambda: ["app.services.serviceb.integration"])
     monkeypatch.setattr(loader, "load_service_registrations", lambda _: [])
     with pytest.raises(RuntimeError) as exc_info:
         get_service_registrations()
     assert str(exc_info.value) == msg.get(
         MessageKeys.EXTENSIONS_NO_VALID_REGISTRATIONS,
-        modules="app.services.docmanager.integration",
+        modules="app.services.serviceb.integration",
     )
 
 
@@ -94,7 +94,7 @@ def test_run_service_shutdown_uses_lifo_hook_order() -> None:
 
     runtime = RuntimeService(
         registration=ServiceRegistration(
-            name="docgen-test",
+            name="service-test",
             shutdown_hooks=[hook_one, hook_two],
         ),
         startup_results=["startup_one", "startup_two"],

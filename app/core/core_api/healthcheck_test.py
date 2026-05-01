@@ -9,8 +9,8 @@ def test_collect_service_runtime_configs_uses_registration_hook(monkeypatch) -> 
     original_import = builtins.__import__
 
     def fake_import(name, globals=None, locals=None, fromlist=(), level=0):
-        if name == "app.services.docgen.config" or name.startswith("app.services.docgen.config."):
-            raise ModuleNotFoundError("No module named 'app.services.docgen.config'")
+        if name == "app.services.service.config" or name.startswith("app.services.service.config."):
+            raise ModuleNotFoundError("No module named 'app.services.service.config'")
         return original_import(name, globals, locals, fromlist, level)
 
     monkeypatch.setattr(builtins, "__import__", fake_import)
@@ -18,7 +18,7 @@ def test_collect_service_runtime_configs_uses_registration_hook(monkeypatch) -> 
     app = FastAPI()
     app.state.service_registrations = [
         ServiceRegistration(
-            name="docgen",
+            name="service",
             runtime_config_hook=lambda: {"render": {"default_output_format": "pdf"}},
         )
     ]

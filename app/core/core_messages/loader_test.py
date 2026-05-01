@@ -19,7 +19,7 @@ def _write_json(path: Path, payload: dict[str, object]) -> None:
 
 def test_message_service_merges_multiple_sources(tmp_path: Path) -> None:
     core_file = tmp_path / "core" / "messages.de.json"
-    service_file = tmp_path / "docgen" / "messages.de.json"
+    service_file = tmp_path / "service" / "messages.de.json"
     _write_json(core_file, {"auth": {"invalid_token": "Ungültiges Token"}})
     _write_json(service_file, {"batch": {"not_found": "Batch nicht gefunden"}})
 
@@ -47,7 +47,7 @@ def test_message_service_returns_key_and_logs_warning_for_missing_key(
 
 def test_message_service_raises_for_duplicate_key(tmp_path: Path) -> None:
     core_file = tmp_path / "core" / "messages.de.json"
-    service_file = tmp_path / "docgen" / "messages.de.json"
+    service_file = tmp_path / "service" / "messages.de.json"
     _write_json(core_file, {"auth": {"invalid_token": "Ungültiges Token"}})
     _write_json(service_file, {"auth": {"invalid_token": "Anderes Token"}})
 

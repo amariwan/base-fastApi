@@ -10,7 +10,7 @@ from app.core.core_storage.s3 import S3StorageClient
 from app.core.core_storage.settings import StorageBackend, StorageSettings
 
 # --------------------------------------------------------------------------- #
-# Fake boto3 helpers (same pattern as existing docmanager tests)
+# Fake boto3 helpers (pattern used in storage tests)
 # --------------------------------------------------------------------------- #
 
 

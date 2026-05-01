@@ -17,8 +17,6 @@ for path in (PROJECT_ROOT, APP_ROOT):
     path_str = str(path)
     if path_str not in sys.path:
         sys.path.insert(0, path_str)
-
-import app.services.docmanager.models.persistence  # noqa: F401
 from app.core.core_db.base import Base
 from app.core.core_db.connection import build_sync_database_url
 
