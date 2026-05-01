@@ -8,6 +8,7 @@ from app.config import get_app_settings, get_db_settings
 from app.core.core_api.healthcheck import healthcheck_router
 from app.core.core_extensions.loader import (
     get_service_registrations,
+    discover_service_module_names,
     register_service_routers,
     run_service_shutdown,
     run_service_startup,
@@ -137,7 +138,12 @@ def create_app() -> FastAPI:
     # Routers
     register_core_routers(app, app_settings.API_PREFIX)
 
-    service_registrations = get_service_registrations()
+    module_names = discover_service_module_names()
+    if module_names:
+        service_registrations = get_service_registrations()
+    else:
+        service_registrations = []
+
     register_service_routers(app, app_settings.API_PREFIX, service_registrations)
     app.state.service_registrations = service_registrations
 
