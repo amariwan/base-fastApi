@@ -1,0 +1,171 @@
+# ============================================================================
+# SHARED
+# ============================================================================
+.docker-login: &docker-login |
+  apk add --no-cache jq
+  echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" --username "$CI_REGISTRY_USER" --password-stdin
+
+.extract-version: &extract-version >-
+  VERSION="$(sed -n 's/^version = \"\([^\"]*\)\".*/\1/p' backend/pyproject.toml | head -n1)"
+
+.backend-release-channel-from-branch: &backend-release-channel-from-branch |
+  case "$CI_COMMIT_BRANCH" in
+    devel)    CHANNEL="devel" ;;
+    test)     CHANNEL="test" ;;
+    release)  CHANNEL="release" ;;
+    *)        echo "No push for branch"; exit 0 ;;
+  esac
+
+.backend-image-ref: &backend-image-ref |
+  IMAGE_NAME="${CI_REGISTRY_IMAGE}/backend/${SERVICE_NAME}"
+  IMAGE_TAG="${CHANNEL}-${VERSION}"
+  echo "Pushing ${IMAGE_NAME}:${IMAGE_TAG}"
+
+.backend-changes: &backend-changes
+  - backend/**/*
+
+.default-python-job:
+  image: ghcr.io/astral-sh/uv:alpine
+  before_script:
+    - curl -sSf https://just.systems/install.sh | bash -s -- --to /usr/local/bin
+    - cd backend
+    - uv sync --group dev
+    - export PYTHONPATH="${PYTHON_SRC_DIR}:${CI_PROJECT_DIR}/backend"
+  cache:
+    key:
+      files:
+        - backend/pyproject.toml
+        - backend/uv.lock
+    paths:
+      - .cache/uv
+    policy: pull-push
+
+.backend-rules: &backend-rules
+  - changes: *backend-changes
+    when: on_success
+  - when: never
+
+# ============================================================================
+# TESTS
+# ============================================================================
+backend:test:
+  stage: test
+  extends: .default-python-job
+  needs: []
+  script:
+    - uv run pytest -m "unit or integration or e2e" -v
+  rules: *backend-rules
+
+# ============================================================================
+# LINT + TYPE
+# ============================================================================
+backend:quality:
+  stage: quality
+  extends: .default-python-job
+  needs: []
+  script:
+    - uv run ruff check .
+    - uv run ruff format --check .
+    - just mypy-report
+  rules: *backend-rules
+
+# ============================================================================
+# SECURITY
+# ============================================================================
+backend:security:
+  stage: quality
+  extends: .default-python-job
+  needs: []
+  script:
+    - uv export --locked --format requirements-txt --no-hashes > req.txt
+    - uv tool run pip-audit -r req.txt || true
+  rules: *backend-rules
+
+# ============================================================================
+# BUILD TEMPLATE
+# ============================================================================
+.backend-build-template:
+  stage: build
+  extends: .default-online-docker-job
+  before_script:
+    - *docker-login
+  script:
+    - *extract-version
+    - docker build . \
+        -f backend/Dockerfile \
+        -t "${IMAGE_LOCAL_NAME}:${VERSION}" \
+        --build-arg SERVICE_NAME="${SERVICE_NAME}" \
+        --build-arg INSTALL_LIBREOFFICE="${INSTALL_LIBREOFFICE}"
+    - docker save "${IMAGE_LOCAL_NAME}:${VERSION}" -o "${IMAGE_TAR}"
+  artifacts:
+    paths:
+      - ${IMAGE_TAR}
+    expire_in: 1h
+  rules: *backend-rules
+
+# ============================================================================
+# BUILD JOBS
+# ============================================================================
+backend:build:docgen:
+  extends: .backend-build-template
+  needs:
+    - backend:test
+    - backend:quality
+    - backend:security
+  variables:
+    SERVICE_NAME: "docgen"
+    INSTALL_LIBREOFFICE: "true"
+    IMAGE_LOCAL_NAME: "backend-docgen"
+    IMAGE_TAR: "docgen.tar"
+
+backend:build:docmanager:
+  extends: .backend-build-template
+  needs:
+    - backend:test
+    - backend:quality
+    - backend:security
+  variables:
+    SERVICE_NAME: "docmanager"
+    INSTALL_LIBREOFFICE: "false"
+    IMAGE_LOCAL_NAME: "backend-docmanager"
+    IMAGE_TAR: "docmanager.tar"
+
+# ============================================================================
+# PUSH TEMPLATE
+# ============================================================================
+.backend-push-template:
+  stage: push
+  needs:
+    - backend:build:docgen
+    - backend:build:docmanager
+  extends: .default-online-docker-job
+  before_script:
+    - *docker-login
+  script:
+    - *extract-version
+    - docker load -i "${IMAGE_TAR}"
+    - *backend-release-channel-from-branch
+    - *backend-image-ref
+    - docker tag "${IMAGE_LOCAL_NAME}:${VERSION}" "${IMAGE_NAME}:${IMAGE_TAG}"
+    - docker push "${IMAGE_NAME}:${IMAGE_TAG}"
+
+# ============================================================================
+# PUSH JOBS
+# ============================================================================
+backend:push:docgen:
+  extends: .backend-push-template
+  needs:
+    - backend:build:docgen
+  variables:
+    SERVICE_NAME: "docgen"
+    IMAGE_LOCAL_NAME: "backend-docgen"
+    IMAGE_TAR: "docgen.tar"
+
+backend:push:docmanager:
+  extends: .backend-push-template
+  needs:
+    - backend:build:docmanager
+  variables:
+    SERVICE_NAME: "docmanager"
+    IMAGE_LOCAL_NAME: "backend-docmanager"
+    IMAGE_TAR: "docmanager.tar"

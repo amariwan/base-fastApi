@@ -1,16 +1,16 @@
 {
     "typeCheckingMode": "basic",
     "include": [
-        "src"
+        "app"
     ],
     "exclude": [
         "tests"
     ],
     "executionEnvironments": [
         {
-            "root": "src",
+            "root": "app",
             "extraPaths": [
-                "src"
+                "app"
             ]
         }
     ],

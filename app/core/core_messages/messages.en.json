@@ -1,0 +1,82 @@
+{
+  "user": {
+    "created": "User created successfully",
+    "not_found": "User not found",
+    "welcome": "Welcome {name}"
+  },
+  "auth": {
+    "invalid_credentials": "Invalid email or password",
+    "unsupported_scheme": "Unsupported authentication scheme",
+    "invalid_header_format": "Invalid Authorization header format",
+    "invalid_token_format": "Invalid token format",
+    "missing_authorization_header": "Missing Authorization header",
+    "token_extraction_failed": "Token extraction failed",
+    "token_expired": "Token has expired",
+    "token_not_yet_valid": "Token not yet valid",
+    "token_signature_invalid": "Invalid token signature",
+    "token_audience_invalid": "Invalid audience",
+    "token_issuer_invalid": "Invalid issuer",
+    "token_algorithm_invalid": "Invalid token algorithm",
+    "invalid_token": "Invalid token",
+    "insufficient_permissions": "Insufficient permissions"
+  },
+  "errors": {
+    "internal_server_error": "Internal server error",
+    "invalid_request": "Invalid request",
+    "unexpected": "An unexpected error occurred"
+  },
+  "config": {
+    "valid": "Configuration is valid"
+  },
+  "api_key": {
+    "protection_enabled_but_empty": "API key protection is enabled but API_KEY is empty",
+    "not_configured": "API key protection is enabled but API_KEY is not configured",
+    "invalid_or_missing": "Invalid or missing API key"
+  },
+  "validation": {
+    "at_least_one_field_required": "At least one field must be provided"
+  },
+  "payload": {
+    "invalid": "Invalid payload"
+  },
+  "request": {
+    "too_large": "Request too large (max {limit} bytes)"
+  },
+  "rate_limit": {
+    "exceeded": "Rate limit exceeded"
+  },
+  "storage": {
+    "path_empty": "Storage path must not be empty",
+    "invalid_path": "Invalid storage path: absolute or traversal paths are forbidden",
+    "filesystem_root_empty": "FILESYSTEM_ROOT must not be empty",
+    "filesystem_create_dir_failed": "Cannot create storage directory '{root}': {error}",
+    "filesystem_not_writable": "Storage directory '{root}' is not writable",
+    "filesystem_write_failed": "Failed to write file '{path}': {error}",
+    "filesystem_read_failed": "Failed to read file '{path}': {error}",
+    "filesystem_delete_failed": "Failed to delete file '{path}': {error}",
+    "filesystem_presigned_unsupported": "Presigned URLs are not supported by filesystem storage",
+    "s3_bucket_required": "S3_BUCKET is required when STORAGE_BACKEND=s3",
+    "s3_boto3_required": "S3 storage requires boto3; install it and restart",
+    "s3_upload_failed": "Failed to upload '{path}' to S3: {error}",
+    "s3_download_failed": "Failed to download '{path}' from S3: {error}",
+    "s3_exists_failed": "Failed to check existence of '{path}' in S3: {error}",
+    "s3_delete_failed": "Failed to delete '{path}' from S3: {error}",
+    "s3_metadata_failed": "Failed to read metadata of '{path}' from S3: {error}",
+    "s3_list_failed": "Failed to list S3 objects: {error}",
+    "s3_presigned_failed": "Failed to generate presigned URL for '{path}': {error}",
+    "unsupported_backend": "Unsupported STORAGE_BACKEND: '{backend}'"
+  },
+  "db": {
+    "disabled": "Database access requested but DB_ENABLED is false.",
+    "session_manager_uninitialized": "DatabaseSessionManager is not initialized",
+    "engine_uninitialized": "Database engine is not initialized"
+  },
+  "extensions": {
+    "skip_module": "Skipping service module '{module}': {error}",
+    "register_service_missing": "Skipping service module '{module}': register_service() not found",
+    "register_service_failed": "Skipping service module '{module}': register_service() failed: {error}",
+    "no_integration_modules": "No service integration modules found under app/services/*/integration.py",
+    "no_valid_registrations": "No valid service registrations found for discovered modules: {modules}",
+    "no_routers_configured": "Service '{service}' has no routers configured"
+  }
+}

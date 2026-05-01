@@ -1,0 +1,82 @@
+{
+  "user": {
+    "created": "Benutzer erfolgreich erstellt",
+    "not_found": "Benutzer nicht gefunden",
+    "welcome": "Willkommen {name}"
+  },
+  "auth": {
+    "invalid_credentials": "E-Mail oder Passwort ungültig",
+    "unsupported_scheme": "Nicht unterstütztes Authentifizierungsschema",
+    "invalid_header_format": "Ungültiges Authorization-Header-Format",
+    "invalid_token_format": "Ungültiges Token-Format",
+    "missing_authorization_header": "Fehlender Authorization-Header",
+    "token_extraction_failed": "Token-Extraktion fehlgeschlagen",
+    "token_expired": "Token ist abgelaufen",
+    "token_not_yet_valid": "Token ist noch nicht gültig",
+    "token_signature_invalid": "Ungültige Token-Signatur",
+    "token_audience_invalid": "Ungültige Zielgruppe",
+    "token_issuer_invalid": "Ungültiger Aussteller",
+    "token_algorithm_invalid": "Ungültiger Token-Algorithmus",
+    "invalid_token": "Ungültiges Token",
+    "insufficient_permissions": "Unzureichende Berechtigungen"
+  },
+  "errors": {
+    "internal_server_error": "Interner Serverfehler",
+    "invalid_request": "Ungültige Anfrage",
+    "unexpected": "Ein unerwarteter Fehler ist aufgetreten"
+  },
+  "config": {
+    "valid": "Konfiguration ist gültig"
+  },
+  "api_key": {
+    "protection_enabled_but_empty": "API-Key-Schutz ist aktiviert, aber API_KEY ist leer",
+    "not_configured": "API-Key-Schutz ist aktiviert, aber API_KEY ist nicht konfiguriert",
+    "invalid_or_missing": "Ungültiger oder fehlender API-Key"
+  },
+  "validation": {
+    "at_least_one_field_required": "Mindestens ein Feld muss angegeben werden"
+  },
+  "payload": {
+    "invalid": "Ungültiger Payload"
+  },
+  "request": {
+    "too_large": "Anfrage zu groß (maximal {limit} Bytes)"
+  },
+  "rate_limit": {
+    "exceeded": "Rate-Limit überschritten"
+  },
+  "storage": {
+    "path_empty": "Storage-Pfad darf nicht leer sein",
+    "invalid_path": "Ungültiger Storage-Pfad: absolute Pfade oder Verzeichniswechsel sind nicht erlaubt",
+    "filesystem_root_empty": "FILESYSTEM_ROOT darf nicht leer sein",
+    "filesystem_create_dir_failed": "Storage-Verzeichnis '{root}' konnte nicht erstellt werden: {error}",
+    "filesystem_not_writable": "Storage-Verzeichnis '{root}' ist nicht beschreibbar",
+    "filesystem_write_failed": "Datei '{path}' konnte nicht geschrieben werden: {error}",
+    "filesystem_read_failed": "Datei '{path}' konnte nicht gelesen werden: {error}",
+    "filesystem_delete_failed": "Datei '{path}' konnte nicht gelöscht werden: {error}",
+    "filesystem_presigned_unsupported": "Presigned URLs werden vom Filesystem-Storage nicht unterstützt",
+    "s3_bucket_required": "S3_BUCKET ist erforderlich, wenn STORAGE_BACKEND=s3",
+    "s3_boto3_required": "S3-Storage benötigt boto3; bitte installieren und neu starten",
+    "s3_upload_failed": "'{path}' konnte nicht nach S3 hochgeladen werden: {error}",
+    "s3_download_failed": "'{path}' konnte nicht aus S3 heruntergeladen werden: {error}",
+    "s3_exists_failed": "Existenz von '{path}' in S3 konnte nicht geprüft werden: {error}",
+    "s3_delete_failed": "'{path}' konnte nicht aus S3 gelöscht werden: {error}",
+    "s3_metadata_failed": "Metadaten von '{path}' in S3 konnten nicht gelesen werden: {error}",
+    "s3_list_failed": "S3-Objekte konnten nicht aufgelistet werden: {error}",
+    "s3_presigned_failed": "Presigned URL für '{path}' konnte nicht erstellt werden: {error}",
+    "unsupported_backend": "Nicht unterstütztes STORAGE_BACKEND: '{backend}'"
+  },
+  "db": {
+    "disabled": "Datenbankzugriff angefordert, aber DB_ENABLED ist false.",
+    "session_manager_uninitialized": "DatabaseSessionManager ist nicht initialisiert",
+    "engine_uninitialized": "Datenbank-Engine ist nicht initialisiert"
+  },
+  "extensions": {
+    "skip_module": "Service-Modul '{module}' wird übersprungen: {error}",
+    "register_service_missing": "Service-Modul '{module}' wird übersprungen: register_service() nicht gefunden",
+    "register_service_failed": "Service-Modul '{module}' wird übersprungen: register_service() fehlgeschlagen: {error}",
+    "no_integration_modules": "Keine Service-Integrationsmodule unter app/services/*/integration.py gefunden",
+    "no_valid_registrations": "Keine gültigen Service-Registrierungen für gefundene Module: {modules}",
+    "no_routers_configured": "Service '{service}' hat keine Router konfiguriert"
+  }
+}

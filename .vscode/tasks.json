@@ -1,0 +1,172 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    // ── Dev-Server ─────────────────────────────────────────────────────────
+    {
+      "label": "dev: FastAPI",
+      "type": "shell",
+      "command": "just dev",
+      "group": "none",
+      "isBackground": true,
+      "presentation": { "reveal": "always", "panel": "dedicated", "close": false },
+      "problemMatcher": []
+    },
+    // ── Tests ──────────────────────────────────────────────────────────────
+    {
+      "label": "test: alle",
+      "type": "shell",
+      "command": "just test",
+      "group": { "kind": "test", "isDefault": true },
+      "presentation": { "reveal": "always", "panel": "shared" },
+      "problemMatcher": ["$python"]
+    },
+    {
+      "label": "test: unit",
+      "type": "shell",
+      "command": "just test-unit",
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" },
+      "problemMatcher": ["$python"]
+    },
+    {
+      "label": "test: integration",
+      "type": "shell",
+      "command": "just test-integration",
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" },
+      "problemMatcher": ["$python"]
+    },
+    {
+      "label": "test: e2e",
+      "type": "shell",
+      "command": "just test-e2e",
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" },
+      "problemMatcher": ["$python"]
+    },
+    {
+      "label": "test: coverage",
+      "type": "shell",
+      "command": "just test-cov",
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" },
+      "problemMatcher": ["$python"]
+    },
+    // ── Code-Qualität ──────────────────────────────────────────────────────
+    {
+      "label": "lint",
+      "type": "shell",
+      "command": "just lint",
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared" },
+      "problemMatcher": {
+        "owner": "ruff",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "pattern": {
+          "regexp": "^(.+):(\\d+):(\\d+):\\s+(\\w+):\\s+(.+)$",
+          "file": 1, "line": 2, "column": 3, "severity": 4, "message": 5
+        }
+      }
+    },
+    {
+      "label": "fmt: format",
+      "type": "shell",
+      "command": "just fmt",
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared" },
+      "problemMatcher": []
+    },
+    {
+      "label": "fix: lint + format",
+      "type": "shell",
+      "command": "just fix",
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared" },
+      "problemMatcher": []
+    },
+    {
+      "label": "mypy: type-check",
+      "type": "shell",
+      "command": "just mypy",
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared" },
+      "problemMatcher": {
+        "owner": "mypy",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "pattern": {
+          "regexp": "^(.+):(\\d+):\\s+(error|warning|note):\\s+(.+)$",
+          "file": 1, "line": 2, "severity": 3, "message": 4
+        }
+      }
+    },
+    {
+      "label": "check: lint + mypy + pyright + tests",
+      "type": "shell",
+      "command": "just check",
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared" },
+      "problemMatcher": ["$python"]
+    },
+    // ── Datenbank (Alembic) ────────────────────────────────────────────────
+    {
+      "label": "db: migrate (upgrade head)",
+      "type": "shell",
+      "command": "uv run alembic upgrade head",
+      "group": "none",
+      "presentation": { "reveal": "always", "panel": "shared" },
+      "problemMatcher": []
+    },
+    {
+      "label": "db: revision (autogenerate)",
+      "type": "shell",
+      "command": "uv run alembic revision --autogenerate -m \"${input:migrationMessage}\"",
+      "group": "none",
+      "presentation": { "reveal": "always", "panel": "shared" },
+      "problemMatcher": []
+    },
+    // ── Docker Compose ─────────────────────────────────────────────────────
+    {
+      "label": "docker: compose up",
+      "type": "shell",
+      "command": "just compose-up",
+      "group": "none",
+      "isBackground": true,
+      "presentation": { "reveal": "always", "panel": "dedicated" },
+      "problemMatcher": []
+    },
+    {
+      "label": "docker: compose down",
+      "type": "shell",
+      "command": "just compose-down",
+      "group": "none",
+      "presentation": { "reveal": "always", "panel": "shared" },
+      "problemMatcher": []
+    },
+    {
+      "label": "docker: compose logs",
+      "type": "shell",
+      "command": "just compose-logs",
+      "group": "none",
+      "isBackground": true,
+      "presentation": { "reveal": "always", "panel": "dedicated" },
+      "problemMatcher": []
+    },
+    // ── Abhängigkeiten ─────────────────────────────────────────────────────
+    {
+      "label": "update: uv sync --upgrade",
+      "type": "shell",
+      "command": "just update",
+      "group": "none",
+      "presentation": { "reveal": "always", "panel": "shared" },
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "migrationMessage",
+      "type": "promptString",
+      "description": "Alembic Migrations-Beschreibung (z. B. add_user_table)",
+      "default": "auto"
+    }
+  ]
+}

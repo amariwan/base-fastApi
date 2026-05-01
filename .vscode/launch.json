@@ -1,13 +1,108 @@
 {
-	"version": "0.2.0",
-	"configurations": [
-		{
-			"name": "Python: FastAPI (uvicorn)",
-			"type": "debugpy",
-			"request": "launch",
-			"module": "uvicorn",
-			"args": ["src.asgi:app", "--reload", "--port", "8000"],
-			"jinja": true
-		}
-	]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "FastAPI: dev (port 5000)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "fastapi",
+      "args": [
+        "dev",
+        "app/asgi.py",
+        "--port",
+        "5000"
+      ],
+      "cwd": "${workspaceFolder}",
+      "envFile": "${workspaceFolder}/.env",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/app",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "jinja": true,
+      "justMyCode": false,
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Uvicorn: reload (port 5000)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "uvicorn",
+      "args": [
+        "app.asgi:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "5000",
+        "--reload"
+      ],
+      "cwd": "${workspaceFolder}",
+      "envFile": "${workspaceFolder}/.env",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/app",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "jinja": true,
+      "justMyCode": false,
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Pytest: alle Tests",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": [
+        "-ra",
+        "-vv",
+        "--strict-markers"
+      ],
+      "cwd": "${workspaceFolder}",
+      "envFile": "${workspaceFolder}/.env",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/app",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "justMyCode": false,
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Pytest: unit",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": [
+        "-ra",
+        "-vv",
+        "--strict-markers",
+        "-m",
+        "unit"
+      ],
+      "cwd": "${workspaceFolder}",
+      "envFile": "${workspaceFolder}/.env",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/app",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "justMyCode": false,
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Pytest: aktuelle Datei",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": [
+        "${file}",
+        "-ra",
+        "-vv"
+      ],
+      "cwd": "${workspaceFolder}",
+      "envFile": "${workspaceFolder}/.env",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/app",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "justMyCode": false,
+      "console": "integratedTerminal"
+    }
+  ]
 }

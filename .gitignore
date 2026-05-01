@@ -1,121 +1,53 @@
-# --- CI/Test-Reports & lokale Artefakte ---
-backend_report.xml
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
-.cache/
-coverage.xml
-coverage_html/
-.coverage*
-htmlcov/
-
-# direnv / pyenv / asdf
-.direnv/
-.python-version
-.tool-versions
-
-# Alembic/DB Laufzeitdateien (Migrationen selbst bleiben im Repo!)
-*.sqlite3-shm
-*.sqlite3-wal
-*.db-shm
-*.db-wal
-
-# Python bytecode / caches
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-*.pyo
-*.pyd
-*.pyc
-__pypackages__/
+*$py.class
 
-# Build / packaging
-dist/
+# Distribution / packaging
 build/
+dist/
 *.egg-info/
 pip-wheel-metadata/
-wheelhouse/
 
-# Virtual environments
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.pytest_cache/
+.hypothesis/
+
+# Local virtual environments
+.venv/
 venv/
 ENV/
 env/
-.venv/
 
-# Tooling caches
-.tox/
-.hypothesis/
-.pyre/
-.pytype/
+# Tool caches
+.mypy_cache/
+.ruff_cache/
 
-# Logs
-*.log
-logs/
-
-# Pre-commit & lokale Overrides
-.pre-commit-cache/
-.pre-commit-config.local.yaml
-
-# Profiling
-*.prof
-*.lprof
-
-# Editor-/Swap-/Tag-Dateien
-*~
-#*#
-*.swp
-*.swo
-.tags
-.tags_sorted_by_file
-.ropeproject/
-.history/
-
-# JetBrains
-.idea/
-*.iml
-
-# VS Code: keep the workspace and recommended settings tracked. Ignore local-only state files
-.vscode/*.code-workspace
-.vscode/*history*/
-
-# OS
-desktop.ini
-.DS_Store
-Thumbs.db
-
-# Docker / container
-docker-compose.override.yml
-docker-compose.*.yml
-.dockerignore
-
-# Secrets / certificates
-*.pem
-*.key
-*.crt
-*.p12
-
-# Static / frontend
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-package-lock.json
-pnpm-lock.yaml
-
-# Misc
-*.tmp
-*.temp
-*.orig
-*.bak
-
-# Optional test outputs
-test-results/
-.junit/
-
-# Environment files (CRITICAL: Keep credentials out of version control)
-# Ignore all .env* but allow the example
+# Environment files
 .env
 .env.*
 !.env.example
 
-# Internationalization compiled files
-*.mo
+# IDE/editor folders
+.idea/
+
+# OS metadata
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Git metadata
+.git
+
+# Misc
+note.*
+profile.html
+profile.speedscope.json
