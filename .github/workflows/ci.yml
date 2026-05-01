@@ -4,6 +4,12 @@ on:
   push:
     branches: [main, master, devel, test, release]
   pull_request:
+name: CI
+
+on:
+  push:
+    branches: [main, master, devel, test, release]
+  pull_request:
 
 jobs:
   test:
@@ -63,69 +69,3 @@ jobs:
         run: |
           uv export --locked --format requirements-txt --no-hashes > req.txt
           uv tool run pip-audit -r req.txt || true
-
-  build-docgen:
-    name: Build docgen image
-    needs: [test, quality, security]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install Python tooling
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.13'
-      - name: Install uv and just
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install uv
-          curl -sSf https://just.systems/install.sh | bash -s -- --to /usr/local/bin
-      - name: Install dependencies
-        run: uv sync --group dev
-      - name: Build Docker image
-        run: |
-          VERSION="$(sed -n 's/^version = \"\([^"]*\)\".*/\1/p' pyproject.toml | head -n1)"
-          IMAGE_LOCAL_NAME="backend-docgen"
-          docker build . \
-            -f Dockerfile \
-            -t "${IMAGE_LOCAL_NAME}:${VERSION}" \
-            --build-arg SERVICE_NAME="docgen" \
-            --build-arg INSTALL_LIBREOFFICE="true"
-          docker save "${IMAGE_LOCAL_NAME}:${VERSION}" -o docgen.tar
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: docgen-tar
-          path: docgen.tar
-
-  build-docmanager:
-    name: Build docmanager image
-    needs: [test, quality, security]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install Python tooling
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.13'
-      - name: Install uv and just
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install uv
-          curl -sSf https://just.systems/install.sh | bash -s -- --to /usr/local/bin
-      - name: Install dependencies
-        run: uv sync --group dev
-      - name: Build Docker image
-        run: |
-          VERSION="$(sed -n 's/^version = \"\([^"]*\)\".*/\1/p' pyproject.toml | head -n1)"
-          IMAGE_LOCAL_NAME="backend-docmanager"
-          docker build . \
-            -f Dockerfile \
-            -t "${IMAGE_LOCAL_NAME}:${VERSION}" \
-            --build-arg SERVICE_NAME="docmanager" \
-            --build-arg INSTALL_LIBREOFFICE="false"
-          docker save "${IMAGE_LOCAL_NAME}:${VERSION}" -o docmanager.tar
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: docmanager-tar
-          path: docmanager.tar

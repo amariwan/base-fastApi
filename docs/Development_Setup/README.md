@@ -54,7 +54,7 @@ Wichtige Variablen fuer lokale Entwicklung:
 | `DB_ENABLED` | Optionaler DB-Stack | `false` (Default) |
 | `STORAGE_BACKEND` | Storage-Adapter (`filesystem`/`s3`) | `filesystem` |
 | `FILESYSTEM_ROOT` | Root fuer Filesystem-Storage | `/workspace/backend/data` lokal |
-| `STORAGE_BUCKET` | Bucket fuer `STORAGE_BACKEND=s3` | z. B. `docgen-dev` |
+| `STORAGE_BUCKET` | Bucket fuer `STORAGE_BACKEND=s3` | z. B. `your-bucket` |
 | `STORAGE_PREFIX` | Prefix im Bucket | z. B. `documents` |
 | `S3_ENDPOINT` | S3 Endpoint (MinIO) | z. B. `http://127.0.0.1:9000` |
 | `S3_REGION` | Region fuer S3 Client | z. B. `eu-central-1` |

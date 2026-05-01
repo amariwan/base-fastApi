@@ -59,8 +59,6 @@ exclude = ["alembic/versions"]
 "app/logging/**" = ["N999", "E501", "N815"]
 "app/schemas/**" = ["N815", "E501"]
 "app/models/**" = ["PLC0415", "E501"]
-"app/services/docgen/errors/messages.py" = ["S105"]
-"app/services/docgen/infrastructure/providers.py" = ["PLW0603"]
 
 [tool.mypy]
 python_version = "3.13"
@@ -81,12 +79,7 @@ exclude = [
 
 [[tool.mypy.overrides]]
 module = [
-    "app.services.docgen.infrastructure.pdf_decorator",
-    "app.services.docgen.infrastructure.pdf_decoration_strategies",
-    "app.services.docgen.infrastructure.preview_generator",
-    "app.services.docgen.infrastructure.pdf_utils",
-    "app.services.docgen.infrastructure.digital_signature",
-    "app.services.docgen.infrastructure.docxtpl_renderer"
+
 ]
 ignore_missing_imports = true
 disallow_untyped_defs = false
@@ -94,13 +87,7 @@ disallow_untyped_defs = false
 [[tool.mypy.overrides]]
 module = [
     "app.core.core_api.*",
-    "app.services.docgen.api.*",
-    "app.services.docgen.tests.*",
     "app.core.core_logging.*",
-    "app.services.docgen.config.*",
-    "app.services.docgen.application.batch_processor",
-    "app.services.docgen.application.batch_use_case",
-    "app.services.docgen.application.build",
     "app.core.core_auth.*",
     "app.core.core_middleware.*",
     "app.views"
@@ -110,13 +97,6 @@ check_untyped_defs = false
 
 [[tool.mypy.overrides]]
 module = [
-    "app.services.docgen.application.orchestrator",
-    "app.services.docgen.infrastructure.*",
-    "app.services.docgen.infrastructure.template_repository",
-    "app.services.docgen.domain.placeholder_extractor",
-    "app.services.docgen.validation.template.template_validation_service",
-    "app.services.docgen.utils.docx_utils",
-    "app.services.docgen.application.view",
     "app.core.core_logging.MyLogger",
     "app.core.core_logging.JourneyLogger"
 ]

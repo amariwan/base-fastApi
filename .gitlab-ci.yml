@@ -106,38 +106,13 @@ backend:security:
 # ============================================================================
 # BUILD JOBS
 # ============================================================================
-backend:build:docgen:
-  extends: .backend-build-template
-  needs:
-    - backend:test
-    - backend:quality
-    - backend:security
-  variables:
-    SERVICE_NAME: "docgen"
-    INSTALL_LIBREOFFICE: "true"
-    IMAGE_LOCAL_NAME: "backend-docgen"
-    IMAGE_TAR: "docgen.tar"
-
-backend:build:docmanager:
-  extends: .backend-build-template
-  needs:
-    - backend:test
-    - backend:quality
-    - backend:security
-  variables:
-    SERVICE_NAME: "docmanager"
-    INSTALL_LIBREOFFICE: "false"
-    IMAGE_LOCAL_NAME: "backend-docmanager"
-    IMAGE_TAR: "docmanager.tar"
+# BUILD JOBS removed (docgen/docmanager)
 
 # ============================================================================
 # PUSH TEMPLATE
 # ============================================================================
 .backend-push-template:
   stage: push
-  needs:
-    - backend:build:docgen
-    - backend:build:docmanager
   extends: .default-online-docker-job
   before_script:
     - *docker-login
@@ -152,20 +127,4 @@ backend:build:docmanager:
 # ============================================================================
 # PUSH JOBS
 # ============================================================================
-backend:push:docgen:
-  extends: .backend-push-template
-  needs:
-    - backend:build:docgen
-  variables:
-    SERVICE_NAME: "docgen"
-    IMAGE_LOCAL_NAME: "backend-docgen"
-    IMAGE_TAR: "docgen.tar"
-
-backend:push:docmanager:
-  extends: .backend-push-template
-  needs:
-    - backend:build:docmanager
-  variables:
-    SERVICE_NAME: "docmanager"
-    IMAGE_LOCAL_NAME: "backend-docmanager"
-    IMAGE_TAR: "docmanager.tar"
+# PUSH JOBS removed (docgen/docmanager)

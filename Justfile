@@ -185,10 +185,6 @@ db-validate:
 # ----------------------------------------------------------------------
 compose-up:
     docker compose up --build -d
-
-compose-up-docgen:
-    docker compose up --build -d backend-docgen
-
 compose-up-template-manager:
     docker compose up --build -d backend-template-manager
 
