@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: uv sync --group dev
       - name: Run tests
-        run: just test -m "unit or integration or e2e" -v
+        run: just test -- -m "unit or integration or e2e" -v
 
   quality:
     name: Quality
