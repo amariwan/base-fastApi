@@ -14,6 +14,15 @@ agents:
   - storage-integration-engineer
   - quality-investigator
   - fastapi-architect
+  - incident-responder
+  - refactor-specialist
+  - feature-developer
+  - bug-triager
+  - api-designer
+  - db-optimizer
+  - observability-engineer
+  - test-coverage-engineer
+  - docs-writer
 
 skills_dir: skills/
 commands_dir: commands/
@@ -21,6 +30,24 @@ context_dir: context/
 permissions_dir: permissions/
 tasks_dir: tasks/
 memories_dir: memories/
+
+tasks:
+  - daily-code-review
+  - release-prep
+  - migration-safety
+  - security-audit
+  - performance-check
+  - dependency-update
+  - onboarding-check
+  - incident-response
+  - refactor
+  - new-feature
+  - bug-triage
+  - api-design
+  - db-optimization
+  - observability-setup
+  - test-coverage
+  - documentation
 
 mcp_config: context/mcp.json
 

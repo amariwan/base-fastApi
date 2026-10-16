@@ -1,26 +1,19 @@
 {
 	"name": "Service (uv + just + Zsh)",
-	"dockerComposeFile": "docker-compose.yml",
-	"service": "app",
-	"runServices": [
-		"postgres",
-		"app"
-	],
+	"build": {
+		"dockerfile": "Dockerfile",
+		"context": ".."
+	},
 	"workspaceFolder": "/workspace",
+	"workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
 	"remoteUser": "developer",
-	"shutdownAction": "stopCompose",
 	"forwardPorts": [
-		5000,
-		"postgres:5432"
+		5000
 	],
 	"portsAttributes": {
 		"5000": {
 			"label": "FastAPI",
 			"onAutoForward": "notify"
-		},
-		"postgres:5432": {
-			"label": "PostgreSQL",
-			"onAutoForward": "silent"
 		}
 	},
 	"postCreateCommand": "uv sync",

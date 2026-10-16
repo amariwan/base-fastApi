@@ -38,14 +38,15 @@ RUN apt-get update \
 RUN groupadd --gid "${USER_GID}" "${USERNAME}" \
     && useradd --uid "${USER_UID}" --gid "${USER_GID}" \
        --create-home --shell /usr/bin/zsh "${USERNAME}" \
-    && mkdir -p /workspace \
-    && chown "${USER_UID}:${USER_GID}" /workspace
+    && mkdir -p /workspace /home/${USERNAME}/.venvs \
+    && chown "${USER_UID}:${USER_GID}" /workspace /home/${USERNAME}/.venvs
 
 USER ${USERNAME}
 ENV HOME="/home/${USERNAME}"
 ENV ZSH="${HOME}/.oh-my-zsh" \
     UV_CACHE_DIR="${HOME}/.cache/uv" \
     UV_TOOL_BIN_DIR="${HOME}/.local/bin" \
+    UV_PROJECT_ENVIRONMENT="${HOME}/.venvs/service" \
     UV_LINK_MODE=copy \
     SHELL=/usr/bin/zsh \
     PATH="${HOME}/.local/bin:${PATH}"

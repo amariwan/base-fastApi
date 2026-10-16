@@ -66,6 +66,15 @@ doubt, update `.agents/` first and mirror to `.github/`.
 | service-slice-engineer | Business service slices |
 | storage-integration-engineer | Filesystem/S3 storage |
 | test-engineer | Pytest tests |
+| incident-responder | Incident triage and mitigation |
+| refactor-specialist | Behavior-preserving refactoring |
+| feature-developer | End-to-end feature development |
+| bug-triager | Bug triage and classification |
+| api-designer | API contract design and review |
+| db-optimizer | Database performance optimization |
+| observability-engineer | Logging, tracing, metrics |
+| test-coverage-engineer | Test coverage improvement |
+| docs-writer | Documentation updates |
 
 ## Skills
 
