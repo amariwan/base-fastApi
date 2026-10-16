@@ -3,6 +3,7 @@ from __future__ import annotations
 import datetime as dt
 import json
 import logging
+from typing import cast
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 LOG_RECORD_BUILTIN_ATTRS = {
@@ -76,7 +77,7 @@ class MyJSONFormatter(logging.Formatter):
         if record.stack_info is not None:
             always_fields["stack_info"] = self.formatStack(record.stack_info)
 
-        message = {
+        message: dict[str, object] = {
             key: (msg_val if (msg_val := always_fields.pop(val, None)) is not None else getattr(record, val))
             for key, val in self.fmt_keys.items()
         }
@@ -84,6 +85,6 @@ class MyJSONFormatter(logging.Formatter):
 
         for key, val in record.__dict__.items():
             if key not in LOG_RECORD_BUILTIN_ATTRS:
-                message[key] = val
+                message[key] = cast(object, val)
 
         return message

@@ -10,19 +10,22 @@ user-invocable: true
 Use this skill when a change belongs inside a service package under app/services.
 
 ## When to Use
+
 - Add a new service package under app/services
 - Extend an existing service with a router, schema, use case, or provider
 - Keep service-layer boundaries intact while implementing a feature
 - Add tests for a service slice without mixing domain, API, and infrastructure concerns
 
 ## Repository Rules
-- New services live under app/services/<service_name>/
-- Keep layers separate: api, application, domain, infrastructure, schemas, tests
-- Put shared code in app/shared instead of coupling services together
-- Keep __init__.py minimal
+
+- New services live under src/app/services/<service_name>/
+- Keep layers separate: src/app/services/<service_name>/api, src/app/services/<service_name>/application, src/app/services/<service_name>/domain, src/app/services/<service_name>/infrastructure, src/app/services/<service_name>/schemas, src/app/services/<service_name>/tests
+- Put shared code in src/app/shared instead of coupling services together
+- Keep **init**.py minimal
 - Use the existing app wiring pattern instead of inventing a parallel bootstrap flow
 
 ## Procedure
+
 1. Identify the target service and the exact slice to change.
 2. Inspect the nearest existing implementation in the same service or a neighboring service.
 3. Place HTTP concerns in api, orchestration in application, rules in domain, and IO in infrastructure.
@@ -31,12 +34,14 @@ Use this skill when a change belongs inside a service package under app/services
 6. Run the narrowest validation first, then expand to lint or type-check only if needed.
 
 ## Validation
+
 - Use just test-unit for co-located unit tests
 - Use just test-integration for cross-layer flows
 - Use just lint or just fix when formatting or lint errors appear
 - Use just mypy for typing-sensitive changes
 
 ## References
-- Service architecture: app/services/README.md
-- App entrypoint: app/views.py
-- Service loading: app/core/core_extensions/loader.py
+
+- Service architecture: src/app/services/README.md
+- App entrypoint: src/app/views.py
+- Service loading: src/app/core/core_extensions/loader.py

@@ -10,6 +10,7 @@ user-invocable: true
 Use this skill when a request touches authentication, authorization, or resource ACL behavior in this repository.
 
 ## When to Use
+
 - Add or adjust JWT validation rules
 - Change FastAPI dependencies like get_current_user or require_read
 - Extend role extraction or claim normalization
@@ -17,6 +18,7 @@ Use this skill when a request touches authentication, authorization, or resource
 - Debug JWKS versus HMAC authentication behavior
 
 ## Repo-Specific Rules
+
 - Auth code lives under app/core/core_auth
 - Keep validation logic in service.py, validators.py, or deps.py instead of scattering token parsing
 - Keep settings env-driven through settings.py
@@ -24,6 +26,7 @@ Use this skill when a request touches authentication, authorization, or resource
 - Fail closed on malformed or unverifiable tokens
 
 ## Procedure
+
 1. Start from the exact dependency, validator, or guard that controls the behavior.
 2. Inspect models.py, roles.py, and settings.py before changing token semantics.
 3. Keep HTTP-specific responses in dependencies or adapters, not in pure helper logic.
@@ -32,12 +35,14 @@ Use this skill when a request touches authentication, authorization, or resource
 6. Validate with the narrowest auth-related unit test first.
 
 ## Validation
-- Prefer app/core/core_auth/core_auth_test.py for targeted checks
+
+- Prefer src/app/core/core_auth/core_auth_test.py for targeted checks
 - Use just test-unit for local auth changes
 - Use just mypy when changing claims models or dependency signatures
 
 ## References
-- app/core/core_auth/README.md
-- app/core/core_auth/deps.py
-- app/core/core_auth/service.py
-- app/core/core_auth/acl.py
+
+- src/app/core/core_auth/README.md
+- src/app/core/core_auth/deps.py
+- src/app/core/core_auth/service.py
+- src/app/core/core_auth/acl.py

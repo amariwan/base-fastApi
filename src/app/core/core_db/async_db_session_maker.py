@@ -2,12 +2,9 @@ from __future__ import annotations
 
 import contextlib
 import functools
-from collections.abc import AsyncIterator
+from asyncio import AbstractEventLoop, get_running_loop
+from collections.abc import AsyncGenerator
 
-from app.config import get_db_settings
-from app.core.core_db.base import Base
-from app.core.core_db.connection import build_async_database_url
-from app.core.core_messages import MessageKeys, msg
 from sqlalchemy.ext.asyncio import (
     AsyncConnection,
     AsyncEngine,
@@ -15,6 +12,11 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
     create_async_engine,
 )
+
+from app.config import get_db_settings
+from app.core.core_db.base import Base
+from app.core.core_db.connection import build_async_database_url
+from app.core.core_messages import MessageKeys, msg
 
 
 class DatabaseSessionManager:
@@ -34,7 +36,9 @@ class DatabaseSessionManager:
     """
 
     def __init__(self, host: str, engine_kwargs: dict[str, object] | None = None):
-        engine: AsyncEngine = create_async_engine(host, **(engine_kwargs or {}))
+        self._host = host
+        self._engine_kwargs = dict(engine_kwargs or {})
+        engine: AsyncEngine = create_async_engine(host, **self._engine_kwargs)
         sessionmaker: async_sessionmaker[AsyncSession] = async_sessionmaker(
             autocommit=False,
             bind=engine,
@@ -43,19 +47,22 @@ class DatabaseSessionManager:
 
         self._engine: AsyncEngine | None = engine
         self._sessionmaker: async_sessionmaker[AsyncSession] | None = sessionmaker
+        self._bound_loop: AbstractEventLoop | None = None
 
     async def close(self) -> None:
         if self._engine is not None:
             await self._engine.dispose()
             self._engine = None
             self._sessionmaker = None
+            self._bound_loop = None
 
     @property
     def engine(self) -> AsyncEngine | None:
         return self._engine
 
     @contextlib.asynccontextmanager
-    async def connect(self) -> AsyncIterator[AsyncConnection]:
+    async def connect(self) -> AsyncGenerator[AsyncConnection]:
+        await self._ensure_current_loop()
         if self._engine is None:
             raise RuntimeError(msg.get(MessageKeys.DB_SESSION_MANAGER_UNINITIALIZED))
 
@@ -67,7 +74,8 @@ class DatabaseSessionManager:
                 raise
 
     @contextlib.asynccontextmanager
-    async def session(self) -> AsyncIterator[AsyncSession]:
+    async def session(self) -> AsyncGenerator[AsyncSession]:
+        await self._ensure_current_loop()
         if self._sessionmaker is None:
             raise RuntimeError(msg.get(MessageKeys.DB_SESSION_MANAGER_UNINITIALIZED))
 
@@ -79,6 +87,31 @@ class DatabaseSessionManager:
             raise
         finally:
             await session.close()
+
+    async def _ensure_current_loop(self) -> None:
+        """Rebind the cached manager when an application uses another event loop.
+
+        SQLAlchemy's async pools retain loop-bound driver connections. This is
+        common in TestClient/CLI scenarios where a cached application service
+        is reused across short-lived loops. Replacing the pool with
+        ``close=False`` avoids trying to close driver objects on the wrong
+        loop; normal application lifecycles still use one pooled engine.
+        """
+        current_loop = get_running_loop()
+        if self._bound_loop is current_loop:
+            return
+        if self._engine is None:
+            raise RuntimeError(msg.get(MessageKeys.DB_SESSION_MANAGER_UNINITIALIZED))
+
+        if self._bound_loop is not None:
+            await self._engine.dispose(close=False)
+            self._engine = create_async_engine(self._host, **self._engine_kwargs)
+            self._sessionmaker = async_sessionmaker(
+                autocommit=False,
+                bind=self._engine,
+                expire_on_commit=False,
+            )
+        self._bound_loop = current_loop
 
 
 @functools.cache
@@ -97,7 +130,7 @@ def get_sessionmanager() -> DatabaseSessionManager:
     )
 
 
-async def get_db_session() -> AsyncIterator[AsyncSession]:
+async def get_db_session() -> AsyncGenerator[AsyncSession]:
     """FastAPI dependency that yields an async DB session.
 
     Handles rollback on exceptions and session closure automatically.
@@ -113,7 +146,11 @@ async def ensure_db_schema() -> None:
     if not db_settings.DB_ENABLED or not db_settings.DB_AUTO_CREATE_TABLES:
         return
 
-    engine = get_sessionmanager().engine
+    session_manager = get_sessionmanager()
+    ensure_current_loop = getattr(session_manager, "_ensure_current_loop", None)
+    if ensure_current_loop is not None:
+        await ensure_current_loop()
+    engine = session_manager.engine
     if engine is None:
         raise RuntimeError(msg.get(MessageKeys.DB_ENGINE_UNINITIALIZED))
 

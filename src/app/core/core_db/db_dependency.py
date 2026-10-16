@@ -27,9 +27,10 @@ Notes:
 
 from typing import Annotated
 
-from app.core.core_db.async_db_session_maker import get_db_session
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.core.core_db.async_db_session_maker import get_db_session
 
 # Annotated type alias for injecting an AsyncSession via FastAPI's Depends mechanism.
 DBSessionDep = Annotated[AsyncSession, Depends(dependency=get_db_session)]

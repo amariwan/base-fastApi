@@ -4,8 +4,6 @@ Zweck
 - Diese Richtlinie legt verbindliche, durchsetzbare Regeln für alle Skills, Agents und Copilot‑Instruktionen in diesem Repository fest. Ziel ist maximale Sicherheit, minimale Angriffsfläche und klare Review‑Prozeduren.
 
 Geltungsbereich
-- Gilt für alle Dateien unter `.github/skills`, `.github/agents`, `.github/prompts`, `.claude/skills`, `.claude/agents`, `.claude/prompts` sowie für `/.github/copilot-instructions.md`.
-
 Grundprinzipien (unabdingbar)
 1. Fail‑closed: Agents/Skills dürfen keine sensiblen oder unsicheren Aktionen ohne menschliche Freigabe ausführen.
 2. Least privilege: Gewähre nur die minimal nötigen Tool‑Rechte (z. B. `read`, `search`).

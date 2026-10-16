@@ -6,13 +6,15 @@ from starlette.middleware.cors import CORSMiddleware
 
 from app.config import get_app_settings, get_db_settings
 from app.core.core_api.healthcheck import healthcheck_router
+from app.core.core_api.runtime_config import runtime_config_router
+from app.core.core_api.whoami import whoami_router
 from app.core.core_extensions.loader import (
     get_service_registrations,
-    discover_service_module_names,
     register_service_routers,
     run_service_shutdown,
     run_service_startup,
 )
+from app.core.core_logging.AppLogger import setup_logging
 from app.core.core_messages.middleware import register_message_language_middleware
 from app.core.core_middleware.http_security_middleware import (
     SecurityHeadersConfig,
@@ -45,6 +47,10 @@ def join_path(prefix: str | None, suffix: str) -> str:
 def register_core_routers(app: FastAPI, api_prefix: str) -> None:
     app.include_router(healthcheck_router)
     app.include_router(healthcheck_router, prefix=api_prefix)
+    app.include_router(whoami_router)
+    app.include_router(whoami_router, prefix=api_prefix)
+    app.include_router(runtime_config_router)
+    app.include_router(runtime_config_router, prefix=api_prefix)
 
 
 @asynccontextmanager
@@ -79,6 +85,7 @@ async def lifespan(app: FastAPI):
 
 
 def create_app() -> FastAPI:
+    setup_logging()
     app_settings = get_app_settings()
 
     app = FastAPI(
@@ -138,12 +145,7 @@ def create_app() -> FastAPI:
     # Routers
     register_core_routers(app, app_settings.API_PREFIX)
 
-    module_names = discover_service_module_names()
-    if module_names:
-        service_registrations = get_service_registrations()
-    else:
-        service_registrations = []
-
+    service_registrations = get_service_registrations()
     register_service_routers(app, app_settings.API_PREFIX, service_registrations)
     app.state.service_registrations = service_registrations
 

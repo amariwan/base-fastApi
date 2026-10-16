@@ -6,6 +6,7 @@ from pathlib import Path
 
 from alembic import command
 from alembic.config import Config
+
 from app.core.core_db.connection import build_sync_database_url
 
 logger = logging.getLogger("app_logger")

@@ -1,10 +1,11 @@
 import asyncio
 import contextlib
-from collections.abc import AsyncIterator
+from collections.abc import AsyncGenerator
 from typing import Protocol
 
-from app.core.core_db.async_db_session_maker import ensure_db_schema
 from pytest import MonkeyPatch
+
+from app.core.core_db.async_db_session_maker import ensure_db_schema
 
 
 class RunSyncFn(Protocol):
@@ -26,7 +27,7 @@ class _DummyEngine:
         self._connection = connection
 
     @contextlib.asynccontextmanager
-    async def begin(self) -> AsyncIterator[_DummyConnection]:
+    async def begin(self) -> AsyncGenerator[_DummyConnection]:
         yield self._connection
 
 

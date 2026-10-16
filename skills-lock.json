@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "skills": {
+    "alembic": {
+      "source": "manutej/luxor-claude-marketplace",
+      "sourceType": "github",
+      "skillPath": "plugins/luxor-database-pro/skills/alembic/SKILL.md",
+      "computedHash": "138f3add6f73ae7e1142b09f85613d1c259d3013a7200ac2e13df5718630c2ef"
+    },
+    "auth-implementation-patterns": {
+      "source": "wshobson/agents",
+      "sourceType": "github",
+      "skillPath": "plugins/developer-essentials/skills/auth-implementation-patterns/SKILL.md",
+      "computedHash": "06f33be59282b5cb58cba503f15d19dcfebbb7e7904224c2dee320c0ec823ead"
+    },
+    "fastapi": {
+      "source": "fastapi/fastapi",
+      "sourceType": "github",
+      "skillPath": "fastapi/.agents/skills/fastapi/SKILL.md",
+      "computedHash": "2f0ff30756b435168276e1a7eb78c07856118575ea174535de7ed86dc88c9be4"
+    },
+    "fastapi-expert": {
+      "source": "jeffallan/claude-skills",
+      "sourceType": "github",
+      "skillPath": "skills/fastapi-expert/SKILL.md",
+      "computedHash": "687496fcceddb0e01d5a9e7110e035e32993ddf04e45ed79065f0c28bcea9e7f"
+    },
+    "fastapi-patterns": {
+      "source": "affaan-m/ecc",
+      "sourceType": "github",
+      "skillPath": "skills/fastapi-patterns/SKILL.md",
+      "computedHash": "88b3727902263469db5fb9a4f170714ab9e6d5e49d4c959d98420d009fca3e30"
+    },
+    "fastapi-python": {
+      "source": "mindrally/skills",
+      "sourceType": "github",
+      "skillPath": "fastapi-python/SKILL.md",
+      "computedHash": "34459011c624a82684f829f22877aeb21a0898ca9b5e090a699aff06542446ca"
+    },
+    "fastapi-templates": {
+      "source": "wshobson/agents",
+      "sourceType": "github",
+      "skillPath": "plugins/api-scaffolding/skills/fastapi-templates/SKILL.md",
+      "computedHash": "708046a283cd90c03bb4e160857eedcf9179244d4f0a36d3de8f266ffa472acc"
+    },
+    "jwt-security": {
+      "source": "mindrally/skills",
+      "sourceType": "github",
+      "skillPath": "jwt-security/SKILL.md",
+      "computedHash": "cba9b95813f0d847bb96ab7006aea408fb4a771ad7ee906e5282e9b27af39a00"
+    },
+    "pydantic": {
+      "source": "pydantic/skills",
+      "sourceType": "github",
+      "skillPath": "skills/pydantic/SKILL.md",
+      "computedHash": "65f68dbab0f7e60bfd26998350d674a104848daf23311067e0829758a7cf6f91"
+    },
+    "python-appservice-deploy": {
+      "source": "microsoft/azure-skills",
+      "sourceType": "github",
+      "skillPath": "skills/python-appservice-deploy/SKILL.md",
+      "computedHash": "6ae95192f2670f8d5385f7f1440816debba0382f46b410cfb4f8935a02a5c3d7"
+    },
+    "sqlalchemy": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/python/data/sqlalchemy/SKILL.md",
+      "computedHash": "f1fe469a7177198fed4bdbba9ffd23110bf9c548afab39f99951da5756fbf272"
+    },
+    "sqlalchemy-alembic-expert-best-practices-code-review": {
+      "source": "wispbit-ai/skills",
+      "sourceType": "github",
+      "skillPath": "skills/sqlalchemy-alembic-expert-best-practices-code-review/SKILL.md",
+      "computedHash": "995e671e51c95c73542b48eb7372a752ba1b5f6c0d2277e07ab0d53543dd507c"
+    },
+    "sqlalchemy-code-review": {
+      "source": "existential-birds/beagle",
+      "sourceType": "github",
+      "skillPath": "plugins/beagle-python/skills/sqlalchemy-code-review/SKILL.md",
+      "computedHash": "06a3f8624bb4cd7a6eb8c0b4c84dd4da0045ee661ab86995b8fc8603d09e96ab"
+    }
+  }
+}

@@ -47,6 +47,13 @@
             }
       },
       "loggers": {
+            "app_logger": {
+                  "level": "INFO",
+                  "handlers": [
+                        "system_stdout"
+                  ],
+                  "propagate": false
+            },
             "system": {
                   "level": "INFO",
                   "handlers": [

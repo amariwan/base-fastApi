@@ -5,8 +5,8 @@ set export := true
 # ----------------------------------------------------------------------
 # Konfiguration
 # ----------------------------------------------------------------------
-APP_MODULE            := "app.asgi:app"
-APP_FILE              := "app/asgi.py"
+APP_MODULE            := "src/app/asgi:app"
+APP_FILE              := "src/app/asgi.py"
 STATIC_DIR            := "static"
 MIGRATION_DIR         := "alembic"
 ALEMBIC_INI           := "alembic.ini"

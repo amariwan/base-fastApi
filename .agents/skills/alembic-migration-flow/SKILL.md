@@ -10,17 +10,20 @@ user-invocable: true
 Create or review alembic migrations and wiring in this repo.
 
 ## When to Use
+
 - Generate an autogenerate revision
 - Review migration wiring for runtime upgrade-to-head flows
-- Validate alembic.ini and app/core/core_db/migrations.py
+- Validate alembic.ini and src/app/core/core_db/migrations.py
 
 ## Procedure
-1. Inspect alembic/env.py and app/core/core_db for migration helpers.
+
+1. Inspect alembic/env.py and src/app/core/core_db for migration helpers.
 2. Ensure `sys.path` includes the `app` package for imports during migration.
-3. Generate a revision using `uv run alembic revision --autogenerate -m "msg"` when schema changes exist.
+3. Generate a revision using `uvicorn run alembic revision --autogenerate -m "msg"` when schema changes exist.
 4. Validate with a local test DB and `just test-integration` when migrations affect runtime behavior.
 
 ## Output
+
 - Migration intent
 - Files to touch
 - Validation command
