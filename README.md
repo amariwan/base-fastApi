@@ -1,228 +1,189 @@
-# Base FastAPI Service
+# base-fastApi
 
-[![Python](https://img.shields.io/badge/Python-3.11%2B-blue)](https://www.python.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.115%2B-green)](https://fastapi.tiangolo.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![CI/CD](https://github.com/amariwan/base-fastApi/actions/workflows/ci.yml/badge.svg)](https://github.com/amariwan/base-fastApi/actions)
+**Build business APIs. Keep the backend platform out of your way.**
 
-**Ein modernes, skalierbares und produktionsreifes Boilerplate für Microservices mit FastAPI.**
+A production-minded FastAPI foundation for teams that need more than a demo scaffold: modular service boundaries, secure authentication, explicit lifecycle management, optional AI infrastructure, and a serious quality toolchain — without forcing a database, Redis, or cloud provider on day one.
 
-Dieses Template bietet einen sofort einsatzbereiten Ausgangspunkt für die Entwicklung von **hochperformanten APIs** mit Best Practices in Bezug auf Struktur, Sicherheit, Testing und Deployment.
+[![Python 3.12+](https://img.shields.io/badge/Python-3.12%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115%2B-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![CI](https://github.com/amariwan/base-fastApi/actions/workflows/ci.yml/badge.svg)](https://github.com/amariwan/base-fastApi/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-F5C518.svg)](LICENSE)
 
----
+> Start as a modular monolith. Preserve the boundaries that let services evolve independently later.
 
-## 🚀 Features
+## Why this exists
 
-| Feature                     | Beschreibung                                                  |
-| --------------------------- | ------------------------------------------------------------- |
-| **FastAPI**                 | Moderne, schnelle (High-Performance) Web-Framework für Python |
-| **Uvicorn ASGI Server**     | Produktionsreifer Server mit Hot-Reload im Development        |
-| **Docker & Docker Compose** | Vollständige Containerisierung mit Multi-Stage-Builds         |
-| **Umgebungsvariablen**      | Konfiguration via `.env` und Pydantic Settings                |
-| **Modulare Struktur**       | Saubere Trennung von Routern, Services, Models, Schemas       |
-| **Authentifizierung**       | JWT-basierte Auth mit Refresh Tokens (optional OAuth2)        |
-| **Error Handling**          | Globale Exception-Handler mit strukturierten Responses        |
-| **Health Checks**           | `/health`, `/ready`, `/metrics` Endpunkte                     |
-| **Scheduler**               | APScheduler für Hintergrundaufgaben                           |
-| **Datenbank**               | SQLAlchemy/Alembic für PostgreSQL, MySQL und SQLite            |
-| **Benutzer**                | E-Mail-basierter Core User mit erweiterbarem UserManager      |
-| **E-Mail**                  | SMTP/Console, optional Celery mit direktem Fallback            |
-| **Caching**                 | In-Memory, optional Redis                                     |
-| **WebSockets**              | Optionale In-Memory- oder Redis-Channels                      |
-| **Logging**                 | Strukturiertes JSON-Logging mit Correlation IDs               |
-| **Monitoring**              | Prometheus Metrics + OpenAPI Docs (`/docs`, `/redoc`)         |
-| **Testing**                 | Pytest + HTTPX mit Test-Datenbank                             |
-| **CI/CD**                   | GitHub Actions Pipeline (Lint, Test, Build, Security Scan)    |
-| **Dokumentation**           | Vollständige Beispiele, Setup-Guides und Architektur          |
+Most FastAPI starters help you create an endpoint. The expensive work starts after that: authentication, configuration, storage, database lifecycle, health diagnostics, consistent errors, service discovery, safe AI access, tests, and deployment conventions.
 
----
+base-fastApi provides that platform layer up front while keeping business code in feature-owned services.
 
-## 📂 Projektstruktur
+| Typical starter | base-fastApi |
+| --- | --- |
+| Routers, schemas, and a Dockerfile | A reusable technical platform plus explicit service boundaries |
+| One hard-wired database path | PostgreSQL, MySQL, or SQLite — and database-free startup by default |
+| Authentication added later | JWKS or HMAC JWT validation, normalized claims, RBAC, and resource ACLs |
+| Infrastructure created at import time | Lazy providers and lifespan-owned startup/shutdown |
+| AI calls scattered through business code | Optional, policy-controlled AI infrastructure behind service-owned ports |
+| Happy-path health endpoint | Liveness, readiness, dependency probes, and service startup diagnostics |
 
-```bash
-base-fastapi/
-├── app/
-│   ├── core/             # Konfiguration, Security, Settings
-│   ├── db/               # Datenbank-Setup & Session
-│   ├── models/           # SQLAlchemy Models
-│   ├── schemas/          # Pydantic Schemas
-│   ├── services/         # Business Logic
-│   ├── utils/            # Hilfsfunktionen
-│   └── main.py           # FastAPI App Instanz
-├── migrations/           # Alembic Migrationen
-├── tests/                # Unit- & Integrationstests
-├── scripts/              # Hilfsskripte (z.B. seed, backup)
-├── .env.example          # Beispiel-Umgebungsvariablen
-├── Dockerfile
-├── docker-compose.yml
-├── pyproject.toml
-└── README.md
+## What you get
+
+### A platform your services can reuse
+
+- **Authentication and authorization** — JWKS or HMAC JWT validation, Keycloak-style role extraction, role hierarchy, FastAPI guards, and Linux-style per-resource ACLs.
+- **Data access** — async SQLAlchemy sessions, Alembic integration, explicit transaction ownership, and PostgreSQL/MySQL/SQLite support.
+- **Storage** — one application-facing contract with filesystem and S3-compatible implementations, path validation, namespacing, and lazy provider creation.
+- **Cache and realtime** — in-process defaults with optional Redis-backed cache and WebSocket Pub/Sub.
+- **Email** — console or SMTP delivery with optional Celery enqueueing and direct-delivery fallback.
+- **HTTP safety** — request IDs, structured logging, request/upload limits, security headers, rate limiting, CORS, and a unified error envelope.
+- **Operations** — readiness and liveness endpoints, startup probes, migration policy, runtime diagnostics, and deterministic resource cleanup.
+- **Service discovery** — add a cohesive capability through `services/<name>/integration.py`; routers and lifecycle hooks are discovered and registered consistently.
+
+### AI infrastructure that starts private
+
+Core AI is optional and disabled by default. It provides internal building blocks for:
+
+- Ollama, OpenAI-compatible endpoints, OpenAI, Anthropic, Google, and OpenRouter;
+- typed output, streaming, embeddings, ingestion, retrieval, agents, tools, MCP, workflows, and evaluations;
+- provider/model registries with capability-aware routing;
+- tenant-aware memory and vector-store contracts;
+- explicit tool permissions, approval gates, endpoint allowlists, timeouts, concurrency limits, and secret-safe telemetry.
+
+Cloud transmission, cloud fallback, prompt storage, and response storage are all opt-in. Core AI exposes Python APIs, not an accidental public AI endpoint.
+
+[Explore the Core AI architecture →](src/app/core/core_ai/README.md)
+
+## Architecture
+
+```mermaid
+flowchart LR
+    HTTP[HTTP / WebSocket] --> API[API adapters]
+    API --> APP[Application use cases]
+    APP --> DOMAIN[Domain]
+    INFRA[Infrastructure adapters] --> APP
+    CORE[Core platform] --> INFRA
+    CORE --> API
+
+    subgraph Services[Feature-owned services]
+        API
+        APP
+        DOMAIN
+        INFRA
+    end
+
+    subgraph Platform[Reusable technical platform]
+        CORE
+    end
 ```
 
----
+The dependency rule is simple: business logic does not depend on FastAPI, SQLAlchemy, provider SDKs, or concrete infrastructure. Services consume stable Core contracts through their own application ports.
 
-## 🛠 Schnellstart
+```text
+src/app/
+├── asgi.py                 # ASGI entrypoint
+├── views.py                # application composition and lifespan
+├── config.py               # validated environment settings
+├── core/                   # auth, DB, AI, storage, cache, channels, email, ...
+├── shared/                 # stable cross-service contracts
+└── services/               # independently organized business capabilities
+```
 
-### Voraussetzungen
+[Read the Core module map →](src/app/core/README.md) · [Read the service architecture guide →](src/app/services/README.md)
 
-- Python 3.11+
-- Docker & Docker Compose (optional)
-- Git
+## Quick start
 
-### 1. Repository klonen
+### Requirements
+
+- Python 3.12+
+- [`uv`](https://docs.astral.sh/uv/)
+- [`just`](https://just.systems/)
 
 ```bash
 git clone https://github.com/amariwan/base-fastApi.git
 cd base-fastApi
+uv sync --group dev
+just dev
 ```
 
-### 2. Umgebung einrichten
+The database and AI platform are disabled by default, so the application can start without external infrastructure or credentials.
+
+- OpenAPI UI: [http://localhost:5000/api/docs](http://localhost:5000/api/docs)
+- Liveness: [http://localhost:5000/health/live](http://localhost:5000/health/live)
+- Readiness: [http://localhost:5000/health/ready](http://localhost:5000/health/ready)
+
+For a configured environment:
 
 ```bash
 cp .env.example .env
-# Passe .env nach Bedarf an (DB, JWT_SECRET, etc.)
+# Review the example values before starting; they are placeholders, not production defaults.
+just dev
 ```
 
-### 3. Mit Docker (empfohlen)
+## Add a business service
+
+Services are discovered through `src/app/services/<name>/integration.py`. A registration can expose routers, startup hooks, shutdown hooks, and a redacted runtime-configuration view.
+
+```python
+from app.core.core_extensions import ServiceRegistration
+
+from .api.router import router
+
+
+def register_service() -> ServiceRegistration:
+    return ServiceRegistration(
+        name="orders",
+        routers=[router],
+    )
+```
+
+Keep HTTP schemas in API adapters, orchestration in Application, business invariants in Domain, and SQLAlchemy/provider code in Infrastructure. The [service development guide](src/app/services/README.md) documents the full contract.
+
+## Configuration philosophy
+
+Every major platform capability is independently configurable. Useful local defaults require no network services; production integrations remain explicit.
+
+| Capability | Default | Optional production path |
+| --- | --- | --- |
+| Database | Disabled | PostgreSQL, MySQL, or SQLite |
+| Cache | In-process memory | Redis |
+| WebSocket channels | Disabled | In-process or Redis Pub/Sub |
+| Storage | Filesystem | S3-compatible object storage |
+| Email | Console | SMTP and optional Celery |
+| AI | Disabled | Local Ollama, compatible endpoint, or allowlisted cloud provider |
+
+See [`.env.example`](.env.example) for the complete configuration surface.
+
+## Quality workflow
 
 ```bash
-docker compose up --build
+just test-unit          # fast isolated tests
+just test-integration   # integration coverage
+just test-e2e           # HTTP/application flows
+just lint               # Ruff lint + format check
+just mypy               # static typing
+just pyright            # independent type analysis
+just test-cov           # coverage report and 75% gate
+just check              # complete local quality gate
 ```
 
-> API läuft auf: [http://localhost:8000](http://localhost:8000)
-> Docs: [http://localhost:8000/docs](http://localhost:8000/docs)
+The repository uses pytest, Ruff, Mypy, Pyright, GitHub Actions, GitLab CI, `uv`, and `just`. External AI/model integrations remain opt-in so normal tests do not require credentials or a running model server.
 
-### 4. Lokal ohne Docker
+## Honest boundaries
 
-```bash
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-pip install -e .
-uvicorn app.main:app --reload
-```
+This repository is a foundation, not a finished product. It deliberately does not invent your domain model, tenant rules, persistence schema, API versioning policy, or deployment topology. Core AI does not claim a persistent vector database, durable conversation store, or public inference API. Those belong to concrete product requirements and service-owned adapters.
 
----
+That constraint is a feature: the platform gives teams strong defaults without hiding product decisions inside a generic framework.
 
-## 🧪 Testing
+## Contributing
 
-```bash
-pytest tests/ -v
-```
+Issues and pull requests are welcome. Before proposing a new abstraction, check whether a focused service implementation or an existing Core contract already solves the problem.
 
-- Testet API-Endpunkte mit isolierter Test-Datenbank
-- Coverage-Report wird generiert
+1. Fork the repository.
+2. Create a focused branch.
+3. Add behavior-focused tests.
+4. Run the relevant quality checks.
+5. Open a pull request that explains the contract and compatibility impact.
 
----
+## License
 
-## 🔒 Authentifizierung
-
-Standardmäßig ist JWT-Auth implementiert:
-
-```bash
-POST /api/v1/auth/login
-{
-  "username": "admin@example.com",
-  "password": "secret"
-}
-→ Returns access_token + refresh_token
-```
-
-Verwende den `access_token` im Header:
-
-```http
-Authorization: Bearer <token>
-```
-
----
-
-## 📊 Monitoring & Health Checks
-
-| Endpoint       | Zweck                             |
-| -------------- | --------------------------------- |
-| `GET /health`  | Einfacher Status-Check            |
-| `GET /ready`   | Datenbank & Abhängigkeiten prüfen |
-| `GET /metrics` | Prometheus-kompatible Metriken    |
-
----
-
-## 🚀 CI/CD Pipeline
-
-Die `.github/workflows/ci.yml` enthält:
-
-- Python Linting (`ruff`)
-- Type Checking (`mypy`)
-- Unit Tests
-- Docker Image Build
-- Security Scan (`bandit`)
-- Dependency Vulnerability Check
-
----
-
-## 🗄 Datenbank & Migrationen
-
-```bash
-# Migration erstellen
-alembic revision --autogenerate -m "Add user table"
-
-# Migration anwenden
-alembic upgrade head
-```
-
----
-
-## 📦 Deployment
-
-### Docker
-
-```dockerfile
-# Multi-Stage Build für minimale Image-Größe
-FROM python:3.11-slim
-COPY . /app
-RUN pip install --no-cache-dir -e .
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
-```
-
-### Kubernetes (Beispiel)
-
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: base-fastapi
-spec:
-  replicas: 3
-  template:
-    spec:
-      containers:
-      - name: api
-        image: your-registry/base-fastapi:latest
-        ports:
-        - containerPort: 8000
-```
-
----
-
-## 🤝 Contributing
-
-Wir freuen uns über Beiträge!
-
-1. Fork das Repository
-2. Erstelle einen Feature-Branch (`git checkout -b feature/amazing`)
-3. Commit deine Änderungen (`git commit -m 'Add amazing feature'`)
-4. Push den Branch (`git push origin feature/amazing`)
-5. Öffne einen Pull Request
-
----
-
-## 📄 Lizenz
-
-Dieses Projekt steht unter der **MIT License** – siehe [LICENSE](LICENSE) für Details.
-
----
-
-## 💡 Inspiration & Quellen
-
-- [FastAPI Best Practices](https://fastapi.tiangolo.com/tutorial/)
-- [SQLAlchemy 2.0](https://docs.sqlalchemy.org/)
-- [Alembic](https://alembic.sqlalchemy.org/)
-- [Tiangolo Full Stack FastAPI Template](https://github.com/tiangolo/full-stack-fastapi-postgresql)
+Released under the [MIT License](LICENSE).
