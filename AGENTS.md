@@ -13,6 +13,7 @@ Python 3.12+ FastAPI backend using Pydantic, SQLAlchemy/AsyncSession, Alembic, `
 - `src/app/services/<name>/`: independently organized business capabilities.
 - `src/app/asgi.py`, `src/app/views.py`, `src/app/config.py`: application entrypoint, composition, and settings; inspect actual responsibilities before editing.
 - `alembic/`: migrations. `tests/`: cross-service integration/E2E suites.
+- **Diagrams in documentation** should always be created with the `diagram-design` skill (`.agents/skills/diagram-design`); prefer HTML/SVG/PNG outputs and keep them consistent with the repo's branding.
 
 **When editing services, first read `src/app/services/README.md`.** Root and nested `AGENTS.md` instructions also apply according to scope. Prefer actual code and configuration to unverified documentation claims; report discrepancies rather than silently changing behavior. User/task instructions determine the requested work; never expand an analysis-only request into implementation.
 
