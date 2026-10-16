@@ -3,6 +3,11 @@ name: storage-backend-integration
 description: 'Add or modify storage backend behavior for filesystem or S3 in this repository. Use when changing app/core/core_storage, storage dependency injection, path validation, or upload and presigned URL flows.'
 argument-hint: 'Describe storage change and expected env/config'
 user-invocable: true
+owner: team/backend
+allowed_tools: [read, search, edit, execute]
+review_required: true
+disabled: false
+tests: "just test-unit"
 ---
 
 # Storage Backend Integration

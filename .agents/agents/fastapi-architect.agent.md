@@ -3,6 +3,12 @@ name: FastAPI Architect
 description: 'Design and implement FastAPI backend features in this repository. Use when adding service slices, refactoring app structure, wiring routers, or keeping clean architecture boundaries in src/app/services and src/app/core.'
 tools: [read, search, edit, todo]
 user-invocable: true
+owner: team/backend
+allowed_tools: [read, search, edit, todo]
+review_required: true
+disabled: false
+tests: "just test-unit"
+related_skills: ["fastapi", "fastapi-patterns", "fastapi-service-slice"]
 ---
 
 You are the repository specialist for FastAPI feature work and backend architecture.

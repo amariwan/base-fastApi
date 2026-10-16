@@ -3,6 +3,11 @@ name: ci-pipeline-summary
 description: 'Brief summary and quick mapping of repository CI to GitHub Actions. Use for small migrations or to explain pipeline responsibilities.'
 argument-hint: 'Describe the pipeline area to summarize (tests, quality, build, security)'
 user-invocable: true
+owner: team/backend
+allowed_tools: [read, search, edit]
+review_required: true
+disabled: false
+tests: "just test-unit"
 ---
 
 # CI Pipeline Summary

@@ -1,6 +1,11 @@
 ---
 name: auth-implementation-patterns
 description: Master authentication and authorization patterns including JWT, OAuth2, session management, and RBAC to build secure, scalable access control systems. Use when implementing auth systems, securing APIs, or debugging security issues.
+owner: team/backend
+allowed_tools: [read, search, edit, execute]
+review_required: true
+disabled: false
+tests: "just test-unit"
 ---
 
 # Authentication & Authorization Implementation Patterns

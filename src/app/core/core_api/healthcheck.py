@@ -7,6 +7,7 @@ from app.config import get_app_settings, get_db_settings
 from app.core.core_auth.settings import get_auth_settings
 from app.core.core_extensions.loader import RuntimeService, ServiceRegistration
 from app.core.core_storage.settings import StorageBackend, get_storage_settings
+from app.core.core_toggles import is_core_enabled
 from app.core.startup_checks import check_db
 from app.core.startup_checks import check_s3 as check_storage
 from app.shared.jobs.providers import get_arq_pool
@@ -97,7 +98,8 @@ def _collect_liveness_checks(request: Request) -> dict[str, HealthCheckResult]:
 
 async def _check_database() -> HealthCheckResult:
     db_settings = get_db_settings()
-    if not db_settings.DB_ENABLED:
+    if not db_settings.DB_ENABLED or not is_core_enabled("db"):
+        return make_health_result("skipped", "database disabled", details={"enabled": False})
         return make_health_result("skipped", "database disabled", details={"enabled": False})
 
     app_settings = get_app_settings()
@@ -127,6 +129,8 @@ async def _check_arq() -> HealthCheckResult:
 
 
 async def _check_storage() -> HealthCheckResult:
+    if not is_core_enabled("storage"):
+        return make_health_result("skipped", "storage disabled", details={"enabled": False})
     app_settings = get_app_settings()
     storage_settings = get_storage_settings()
     ok, message = await check_storage(timeout_seconds=app_settings.S3_PROBE_TIMEOUT_SECONDS)

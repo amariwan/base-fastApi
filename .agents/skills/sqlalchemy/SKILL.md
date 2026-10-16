@@ -12,6 +12,11 @@ progressive_disclosure:
     quick_start: "1. Review the core concepts below. 2. Apply patterns to your use case. 3. Follow best practices for implementation."
   references:
     - sql-quality-antipatterns.md
+owner: team/backend
+allowed_tools: [read, search, edit]
+review_required: true
+disabled: false
+tests: "just test-unit"
 ---
 # SQLAlchemy ORM Skill
 

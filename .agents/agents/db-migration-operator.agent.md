@@ -3,6 +3,12 @@ name: DB Migration Operator
 description: 'Create or review Alembic migration flow, startup upgrades, and database schema wiring in this backend. Use when changing alembic files, app/core/core_db, migration commands, or DB startup checks.'
 tools: [read, search, edit, execute]
 user-invocable: true
+owner: team/backend
+allowed_tools: [read, search, edit, execute]
+review_required: true
+disabled: false
+tests: "just test-integration"
+related_skills: ["alembic", "alembic-migration-flow"]
 ---
 
 You are the repository specialist for schema migration workflow and database upgrade wiring.

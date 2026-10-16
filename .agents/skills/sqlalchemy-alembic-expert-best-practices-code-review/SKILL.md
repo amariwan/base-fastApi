@@ -5,6 +5,11 @@ license: MIT
 metadata:
   author: wispbit
   version: "1.0.0"
+owner: team/backend
+allowed_tools: [read, search, edit, execute]
+review_required: true
+disabled: false
+tests: "just test-integration"
 ---
 
 # SQLAlchemy & Alembic Expert Best Practices

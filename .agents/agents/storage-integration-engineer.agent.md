@@ -3,6 +3,12 @@ name: Storage Integration Engineer
 description: 'Implement or review filesystem and S3 storage behavior in this backend. Use when changing src/app/core/core_storage, storage factories, path normalization, upload flows, or backend-specific tests.'
 tools: [read, search, edit, execute]
 user-invocable: true
+owner: team/backend
+allowed_tools: [read, search, edit, execute]
+review_required: true
+disabled: false
+tests: "just test-unit"
+related_skills: ["storage-backend-integration"]
 ---
 
 You are the repository specialist for binary storage integrations and storage safety.

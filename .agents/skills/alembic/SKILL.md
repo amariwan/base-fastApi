@@ -27,6 +27,11 @@ dependencies:
   - psycopg2-binary>=2.9.0
   - pytest>=7.0.0
 author: Customer Support Tech Enablement Team
+owner: team/backend
+allowed_tools: [read, search, edit, execute]
+review_required: true
+disabled: false
+tests: "just test-integration"
 ---
 
 # Alembic Database Migration Management Skill

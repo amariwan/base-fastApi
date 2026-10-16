@@ -57,6 +57,7 @@ class AuthSettings(BaseSettings):
         case_sensitive=False,
     )
 
+    ENABLED: bool = True
     MODE: StrictStr = Field(default="jwks", description="jwks | hs")
     VALIDATE_SIGNATURE: bool = Field(default=True, description="Enable full JWT signature validation")
     VERIFY_SIGNATURE: bool = True
@@ -93,6 +94,14 @@ class AuthSettings(BaseSettings):
 
     JWKS_URL: HttpUrl | None = None
     HS_SECRET: SecretStr | None = None
+
+    @property
+    def AUTH_ENABLED(self) -> bool:  # noqa: N802
+        return self.ENABLED
+
+    @property
+    def enabled(self) -> bool:
+        return self.ENABLED
 
     @field_validator("ALGORITHMS", mode="before")
     @classmethod

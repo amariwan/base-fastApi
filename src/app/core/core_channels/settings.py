@@ -23,6 +23,14 @@ class ChannelSettings(BaseSettings):
     CHANNELS_PREFIX: str = "app:channels"
     CHANNELS_QUEUE_SIZE: int = Field(default=100, ge=1)
 
+    @property
+    def ENABLED(self) -> bool:  # noqa: N802
+        return self.CHANNELS_ENABLED
+
+    @property
+    def enabled(self) -> bool:
+        return self.CHANNELS_ENABLED
+
     @model_validator(mode="after")
     def validate_redis(self) -> ChannelSettings:
         if self.CHANNELS_ENABLED and self.CHANNELS_BACKEND is ChannelBackend.REDIS and not self.CHANNELS_REDIS_URL:

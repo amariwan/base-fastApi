@@ -3,6 +3,11 @@ name: alembic-migration-flow
 description: 'Create, review, or wire Alembic migrations in this repository. Use when changing database startup migration behavior, alembic config, revision generation, or runtime upgrade-to-head flow under app/core/core_db and alembic.'
 argument-hint: 'Describe the migration goal or the alembic revision intent'
 user-invocable: true
+owner: team/backend
+allowed_tools: [read, search, edit, execute]
+review_required: true
+disabled: false
+tests: "just test-integration"
 ---
 
 # Alembic Migration Flow

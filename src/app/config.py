@@ -82,6 +82,21 @@ class AppSettings(BaseSettings):
 
     MSYS2_ENV_CONV_EXCL: str | None = None
 
+    # Core module toggles (each core can be turned off via env)
+    API_ENABLED: bool = True
+    AUTH_ENABLED: bool = True
+    AI_ENABLED: bool = False
+    CACHE_ENABLED: bool = True
+    CHANNELS_ENABLED: bool = False
+    DB_ENABLED: bool = False
+    EMAIL_ENABLED: bool = True
+    EXTENSIONS_ENABLED: bool = True
+    LOGGING_ENABLED: bool = True
+    MESSAGES_ENABLED: bool = True
+    MIDDLEWARE_ENABLED: bool = True
+    STORAGE_ENABLED: bool = True
+    USERS_ENABLED: bool = True
+
     model_config = SettingsConfigDict(env_file=(".env", ".env.dev"), case_sensitive=False, extra="ignore")
 
     def csv(self, raw: str) -> list[str]:
@@ -133,6 +148,14 @@ class DbSettings(BaseSettings):
     DB_POOL_RECYCLE: int = 3600  # seconds before recycling idle connections
     DB_POOL_PRE_PING: bool = True  # test connections before use (prevents stale-connection errors)
     DB_AUTO_CREATE_TABLES: bool = True
+
+    @property
+    def ENABLED(self) -> bool:  # noqa: N802
+        return self.DB_ENABLED
+
+    @property
+    def enabled(self) -> bool:
+        return self.DB_ENABLED
 
     model_config = SettingsConfigDict(env_file=(".env", ".env.dev"), case_sensitive=False, extra="ignore")
 
@@ -192,3 +215,7 @@ def get_api_roles() -> dict[str, str]:
         "delete": settings.ROLES_DELETE,
         "admin": settings.ROLES_ADMIN,
     }
+
+
+# Re-export core toggle helper for convenience.
+from app.core.core_toggles import is_core_enabled  # noqa: E402, F401

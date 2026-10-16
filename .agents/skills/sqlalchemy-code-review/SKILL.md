@@ -1,6 +1,11 @@
 ---
 name: sqlalchemy-code-review
 description: Reviews SQLAlchemy code for session management, relationships, N+1 queries, and migration patterns. Use when reviewing SQLAlchemy 2.0 code, checking session lifecycle, relationship() usage, or Alembic migrations.
+owner: team/backend
+allowed_tools: [read, search, edit]
+review_required: true
+disabled: false
+tests: "just test-unit"
 ---
 
 # SQLAlchemy Code Review

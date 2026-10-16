@@ -12,6 +12,11 @@ metadata:
   scope: implementation
   output-format: code
   related-skills: fullstack-guardian, django-expert, test-master
+owner: team/backend
+allowed_tools: [read, search, edit]
+review_required: true
+disabled: false
+tests: "just test-unit"
 ---
 
 # FastAPI Expert

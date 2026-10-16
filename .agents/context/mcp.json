@@ -1,0 +1,25 @@
+{
+  "mcp": {
+    "filesystem": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "."
+      ],
+      "enabled": true
+    },
+    "redis": {
+      "type": "local",
+      "command": [
+        "uvx",
+        "mcp-redis"
+      ],
+      "environment": {
+        "REDIS_URL": "{env:REDIS_URL}"
+      },
+      "enabled": false
+    }
+  }
+}

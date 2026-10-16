@@ -4,6 +4,11 @@ description: Expert in FastAPI Python development with best practices for APIs a
 metadata:
   maintainer: Mindrally
   source: https://github.com/Mindrally/skills
+owner: team/backend
+allowed_tools: [read, search, edit]
+review_required: true
+disabled: false
+tests: "just test-unit"
 ---
 
 # FastAPI Python

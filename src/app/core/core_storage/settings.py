@@ -40,6 +40,7 @@ class StorageSettings(BaseSettings):
     )
 
     # Default to S3 for environments without local storage.
+    STORAGE_ENABLED: bool = True
     STORAGE_BACKEND: StorageBackend = StorageBackend.S3
 
     # S3 settings
@@ -60,6 +61,14 @@ class StorageSettings(BaseSettings):
 
     # Filesystem settings
     FILESYSTEM_ROOT: str = "/data"
+
+    @property
+    def ENABLED(self) -> bool:  # noqa: N802
+        return self.STORAGE_ENABLED
+
+    @property
+    def enabled(self) -> bool:
+        return self.STORAGE_ENABLED
 
     @model_validator(mode="before")
     @classmethod

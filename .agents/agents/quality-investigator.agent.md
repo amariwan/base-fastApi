@@ -3,6 +3,12 @@ name: Quality Investigator
 description: 'Diagnose failing lint, typing, or pytest checks in this FastAPI repo. Use when just fix, just lint, just mypy, pyright, or pytest fail and you need a focused root-cause analysis or repair plan.'
 tools: [read, search, execute, edit]
 user-invocable: true
+owner: team/backend
+allowed_tools: [read, search, execute, edit]
+review_required: true
+disabled: false
+tests: "just lint"
+related_skills: ["backend-quality-loop"]
 ---
 You are the specialist for code-quality failures and validation regressions in this repository.
 

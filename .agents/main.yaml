@@ -1,0 +1,30 @@
+# .agents manifest — what this project uses
+version: 1
+project: base-fastApi
+
+agents:
+  - api-contract-engineer
+  - auth-access-engineer
+  - config-settings-engineer
+  - core-ai-engineer
+  - core-platform-engineer
+  - db-migration-operator
+  - performance-engineer
+  - security-reviewer
+  - storage-integration-engineer
+  - quality-investigator
+  - fastapi-architect
+
+skills_dir: skills/
+commands_dir: commands/
+context_dir: context/
+permissions_dir: permissions/
+tasks_dir: tasks/
+memories_dir: memories/
+
+mcp_config: context/mcp.json
+
+governance:
+  policy: permissions/STRICT_AGENT_POLICY.md
+  validator: tools/validate_agents.py
+  check_command: just agents-check

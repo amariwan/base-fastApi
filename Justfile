@@ -102,6 +102,12 @@ lint:
     {{UV}} ruff check .
     {{UV}} ruff format --check .
 
+agents-check:
+    uv run python .agents/tools/validate_agents.py
+
+agents-fix-frontmatter:
+    uv run python .agents/tools/migrate_agents_frontmatter.py
+
 fmt:
     uvx ruff format .
 

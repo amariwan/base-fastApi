@@ -60,6 +60,14 @@ class AISettings(BaseSettings):
     GOOGLE_API_KEY: SecretStr | None = None
     OPENROUTER_API_KEY: SecretStr | None = None
 
+    @property
+    def AI_ENABLED(self) -> bool:  # noqa: N802
+        return self.ENABLED
+
+    @property
+    def enabled(self) -> bool:
+        return self.ENABLED
+
     @field_validator("ALLOWED_PROVIDERS", "ALLOWED_ENDPOINT_HOSTS", mode="before")
     @classmethod
     def _parse_csv_fields(cls, value: object) -> tuple[str, ...]:

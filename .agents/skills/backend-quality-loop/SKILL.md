@@ -3,6 +3,11 @@ name: backend-quality-loop
 description: 'Run the repo quality loop for this FastAPI backend. Use when fixing lint, format, mypy, pyright, pytest, or dependency drift after code changes.'
 argument-hint: 'Describe the failing command, file, or scope to validate'
 user-invocable: true
+owner: team/backend
+allowed_tools: [read, search, edit, execute]
+review_required: true
+disabled: false
+tests: "just lint"
 ---
 
 # Backend Quality Loop

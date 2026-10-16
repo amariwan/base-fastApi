@@ -17,6 +17,7 @@ class CacheBackend(StrEnum):
 class CacheSettings(BaseSettings):
     model_config = SettingsConfigDict(env_file=(".env", ".env.dev"), case_sensitive=False, extra="ignore")
 
+    CACHE_ENABLED: bool = True
     CACHE_BACKEND: CacheBackend = CacheBackend.MEMORY
     CACHE_DEFAULT_TTL_SECONDS: int = Field(default=300, ge=1)
     CACHE_MAX_ENTRIES: int = Field(default=1024, ge=1)
@@ -28,6 +29,14 @@ class CacheSettings(BaseSettings):
         if self.CACHE_BACKEND is CacheBackend.REDIS and not self.CACHE_REDIS_URL:
             raise ValueError("CACHE_REDIS_URL is required for the Redis cache backend")
         return self
+
+    @property
+    def ENABLED(self) -> bool:  # noqa: N802
+        return self.CACHE_ENABLED
+
+    @property
+    def enabled(self) -> bool:
+        return self.CACHE_ENABLED
 
 
 @lru_cache(maxsize=1)

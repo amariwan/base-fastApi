@@ -3,6 +3,11 @@ name: fastapi-service-slice
 description: 'Create or extend a FastAPI service slice in this repository. Use when adding routers, use cases, schemas, provider wiring, or tests under app/services.'
 argument-hint: 'Describe the service name and the slice to add or change'
 user-invocable: true
+owner: team/backend
+allowed_tools: [read, search, edit]
+review_required: true
+disabled: false
+tests: "just test-unit"
 ---
 
 # FastAPI Service Slice

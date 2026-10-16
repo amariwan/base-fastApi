@@ -12,6 +12,7 @@ from app.core.core_db.startup_migrations import (
     run_migrations_with_lock,
 )
 from app.core.core_storage import get_storage_client
+from app.core.core_toggles import is_core_enabled
 from sqlalchemy import text
 
 if TYPE_CHECKING:
@@ -73,8 +74,9 @@ def _log_probe_result(name: str, ok: bool, message: str, *, failure_level: int =
 
 
 async def _run_startup_probes(app_settings: AppSettings) -> None:
-    s3_ok, s3_msg = await check_s3(timeout_seconds=app_settings.S3_PROBE_TIMEOUT_SECONDS)
-    _log_probe_result("S3", s3_ok, s3_msg)
+    if is_core_enabled("storage"):
+        s3_ok, s3_msg = await check_s3(timeout_seconds=app_settings.S3_PROBE_TIMEOUT_SECONDS)
+        _log_probe_result("S3", s3_ok, s3_msg)
 
     db_ok, db_msg = await check_db(timeout_seconds=app_settings.DB_PROBE_TIMEOUT_SECONDS)
     _log_probe_result("DB", db_ok, db_msg, failure_level=logging.ERROR)

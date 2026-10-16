@@ -3,6 +3,12 @@ name: Auth Access Engineer
 description: 'Implement or review JWT auth, FastAPI dependencies, RBAC guards, or ACL checks in this backend. Use when modifying src/app/core/core_auth, token validation, role mapping, or request access control.'
 tools: [read, search, edit, todo]
 user-invocable: true
+owner: team/backend
+allowed_tools: [read, search, edit, todo]
+review_required: true
+disabled: false
+tests: "just test-unit"
+related_skills: ["auth-jwt-guards", "auth-implementation-patterns", "jwt-security"]
 ---
 
 You are the repository specialist for Auth and RBAC work.

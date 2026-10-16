@@ -17,6 +17,7 @@ class EmailBackendName(StrEnum):
 class EmailSettings(BaseSettings):
     model_config = SettingsConfigDict(env_file=(".env", ".env.dev"), case_sensitive=False, extra="ignore")
 
+    EMAIL_ENABLED: bool = True
     EMAIL_BACKEND: EmailBackendName = EmailBackendName.CONSOLE
     EMAIL_FROM: str = "noreply@localhost"
     EMAIL_SMTP_HOST: str | None = None
@@ -29,6 +30,14 @@ class EmailSettings(BaseSettings):
     EMAIL_USE_CELERY: bool = False
     EMAIL_CELERY_BROKER_URL: str | None = None
     EMAIL_CELERY_TASK_NAME: str = "app.core.email.send"
+
+    @property
+    def ENABLED(self) -> bool:  # noqa: N802
+        return self.EMAIL_ENABLED
+
+    @property
+    def enabled(self) -> bool:
+        return self.EMAIL_ENABLED
 
     @model_validator(mode="after")
     def validate_selected_backends(self) -> EmailSettings:

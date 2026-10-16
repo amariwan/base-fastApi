@@ -3,6 +3,11 @@ name: auth-jwt-guards
 description: 'Implement or adjust JWT validation, FastAPI auth dependencies, role guards, or ACL checks in this repository. Use when changing app/core/core_auth, require_* dependencies, role extraction, or JWKS and HMAC auth flows.'
 argument-hint: 'Describe the auth flow, guard, token rule, or ACL behavior to change'
 user-invocable: true
+owner: team/backend
+allowed_tools: [read, search, edit, execute]
+review_required: true
+disabled: false
+tests: "just test-unit"
 ---
 
 # Auth JWT Guards

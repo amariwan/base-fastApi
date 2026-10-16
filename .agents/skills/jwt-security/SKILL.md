@@ -4,6 +4,11 @@ description: Guidelines for implementing JWT authentication with security best p
 metadata:
   maintainer: Mindrally
   source: https://github.com/Mindrally/skills
+owner: team/backend
+allowed_tools: [read, search, edit]
+review_required: true
+disabled: false
+tests: "just test-unit"
 ---
 
 # JWT Security

@@ -5,6 +5,11 @@ license: MIT
 metadata:
   author: Microsoft
   version: "1.1.1"
+owner: team/backend
+allowed_tools: [read, search, edit, execute]
+review_required: true
+disabled: false
+tests: "just test-unit"
 ---
 
 # Python on Azure App Service — Code Deploy

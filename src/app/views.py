@@ -27,6 +27,7 @@ from app.core.core_middleware.http_security_middleware import (
     register_request_size_middleware,
     register_security_headers_middleware,
 )
+from app.core.core_toggles import is_core_enabled
 from app.core.startup_checks import perform_startup_checks
 from app.shared.errors.handlers import install_unified_exception_handlers
 
@@ -63,7 +64,7 @@ async def lifespan(app: FastAPI):
 
     logger.info("Starting app with LOG_LEVEL=%s", app_settings.LOG_LEVEL.value)
 
-    if db_settings.DB_ENABLED:
+    if db_settings.DB_ENABLED and is_core_enabled("db"):
         # Delegate all DB/S3 probes and migration orchestration to a single
         # function to keep this module focused on HTTP app wiring.
         await perform_startup_checks()
@@ -71,7 +72,7 @@ async def lifespan(app: FastAPI):
         logger.info("Database disabled - skipping DB init")
 
     # Startup: services
-    service_regs = getattr(app.state, "service_registrations", [])
+    service_regs = getattr(app.state, "service_registrations", []) if is_core_enabled("extensions") else []
     runtime_services = await run_service_startup(app, service_regs)
     app.state.runtime_services = runtime_services
 
@@ -84,11 +85,14 @@ async def lifespan(app: FastAPI):
         except Exception:
             logger.exception("Service shutdown failed")
 
-        for name, close_resource in (
-            ("cache", close_cache),
-            ("channels", close_channel_layer),
-            ("email", close_email_dispatcher),
-        ):
+        close_resources = []
+        if is_core_enabled("cache"):
+            close_resources.append(("cache", close_cache))
+        if is_core_enabled("channels"):
+            close_resources.append(("channels", close_channel_layer))
+        if is_core_enabled("email"):
+            close_resources.append(("email", close_email_dispatcher))
+        for name, close_resource in close_resources:
             try:
                 await close_resource()
             except Exception:
@@ -98,7 +102,8 @@ async def lifespan(app: FastAPI):
 
 
 def create_app() -> FastAPI:
-    setup_logging()
+    if is_core_enabled("logging"):
+        setup_logging()
     app_settings = get_app_settings()
 
     app = FastAPI(
@@ -120,45 +125,54 @@ def create_app() -> FastAPI:
         )
 
     # Middleware (registered in reverse call order — last registered runs first)
-    register_message_language_middleware(app)
-    register_request_id_middleware(app)
-    register_http_logging_middleware(
-        app,
-        enabled=app_settings.HTTP_LOGGING_ENABLED,
-        request_logging_enabled=app_settings.HTTP_REQUEST_LOGGING_ENABLED,
-        response_logging_enabled=app_settings.HTTP_RESPONSE_LOGGING_ENABLED,
-        fault_logging_enabled=app_settings.HTTP_FAULT_LOGGING_ENABLED,
-    )
-    register_request_size_middleware(
-        app,
-        max_request_size_bytes=app_settings.MAX_REQUEST_SIZE_BYTES,
-        max_upload_size_bytes=app_settings.MAX_UPLOAD_SIZE_BYTES,
-    )
-    register_security_headers_middleware(
-        app,
-        SecurityHeadersConfig(
-            enabled=app_settings.SECURITY_HEADERS_ENABLED,
-            hsts_enabled=app_settings.SECURITY_HEADERS_HSTS_ENABLED,
-            hsts_max_age=app_settings.SECURITY_HEADERS_HSTS_MAX_AGE,
-            csp_enabled=app_settings.SECURITY_HEADERS_CSP_ENABLED,
-            csp_directives=app_settings.SECURITY_HEADERS_CSP_DIRECTIVES,
-            x_frame_options=app_settings.SECURITY_HEADERS_X_FRAME_OPTIONS,
-        ),
-    )
-    register_rate_limit_middleware(
-        app,
-        enabled=app_settings.RATE_LIMIT_ENABLED,
-        max_requests=app_settings.RATE_LIMIT_MAX_REQUESTS,
-        window_seconds=app_settings.RATE_LIMIT_WINDOW_SECONDS,
-    )
+    if is_core_enabled("messages"):
+        register_message_language_middleware(app)
+    if is_core_enabled("middleware"):
+        register_request_id_middleware(app)
+        register_http_logging_middleware(
+            app,
+            enabled=app_settings.HTTP_LOGGING_ENABLED,
+            request_logging_enabled=app_settings.HTTP_REQUEST_LOGGING_ENABLED,
+            response_logging_enabled=app_settings.HTTP_RESPONSE_LOGGING_ENABLED,
+            fault_logging_enabled=app_settings.HTTP_FAULT_LOGGING_ENABLED,
+        )
+        register_request_size_middleware(
+            app,
+            max_request_size_bytes=app_settings.MAX_REQUEST_SIZE_BYTES,
+            max_upload_size_bytes=app_settings.MAX_UPLOAD_SIZE_BYTES,
+        )
+        register_security_headers_middleware(
+            app,
+            SecurityHeadersConfig(
+                enabled=app_settings.SECURITY_HEADERS_ENABLED,
+                hsts_enabled=app_settings.SECURITY_HEADERS_HSTS_ENABLED,
+                hsts_max_age=app_settings.SECURITY_HEADERS_HSTS_MAX_AGE,
+                csp_enabled=app_settings.SECURITY_HEADERS_CSP_ENABLED,
+                csp_directives=app_settings.SECURITY_HEADERS_CSP_DIRECTIVES,
+                x_frame_options=app_settings.SECURITY_HEADERS_X_FRAME_OPTIONS,
+            ),
+        )
+        register_rate_limit_middleware(
+            app,
+            enabled=app_settings.RATE_LIMIT_ENABLED,
+            max_requests=app_settings.RATE_LIMIT_MAX_REQUESTS,
+            window_seconds=app_settings.RATE_LIMIT_WINDOW_SECONDS,
+        )
 
     # Global error handlers (unified error envelope for all services)
     install_unified_exception_handlers(app)
 
     # Routers
-    register_core_routers(app, app_settings.API_PREFIX)
+    if is_core_enabled("api"):
+        register_core_routers(app, app_settings.API_PREFIX)
 
-    service_registrations = get_service_registrations()
+    if is_core_enabled("extensions"):
+        try:
+            service_registrations = get_service_registrations()
+        except RuntimeError:
+            service_registrations = []
+    else:
+        service_registrations = []
     register_service_routers(app, app_settings.API_PREFIX, service_registrations)
     app.state.service_registrations = service_registrations
 
