@@ -10,6 +10,9 @@ dependencies = [
     "sqlalchemy>=2.0.47",
     "alembic>=1.16.5",
     "asyncpg>=0.31.0",
+    "aiosqlite>=0.22.0",
+    "asyncmy>=0.2.10",
+    "email-validator>=2.2.0",
     "gunicorn>=25.1.0",
     "pyjwt>=2.11.0",
     "cryptography>=42.0",
@@ -17,10 +20,15 @@ dependencies = [
     "tzdata>=2025.3",
     "uvicorn>=0.42.0",
     "psycopg[binary]>=3.3.3",
+    "pymysql>=1.1.2",
     "pydantic-ai-slim[anthropic,google,mcp,openai]>=2.0.0,<3.0.0",
     "pydantic-evals>=2.0.0,<3.0.0",
     "greenlet>=3.3.2",
 ]
+
+[project.optional-dependencies]
+redis = ["redis>=6.4.0"]
+celery = ["celery>=5.5.0"]
 
 [dependency-groups]
 dev = [

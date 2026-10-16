@@ -8,10 +8,9 @@ import time
 from alembic.config import Config
 from alembic.runtime.migration import MigrationContext
 from alembic.script import ScriptDirectory
-from sqlalchemy import create_engine, text
-
 from app.core.core_db.connection import build_sync_database_url
 from app.core.core_db.migrations import get_alembic_ini_path
+from sqlalchemy import create_engine, make_url, text
 
 
 async def get_alembic_heads_and_db_revision(timeout_seconds: int = 5) -> tuple[list[str], str | None]:
@@ -103,7 +102,8 @@ async def run_migrations_with_lock(
 
     sqlalchemy_url = build_sync_database_url()
     acquired = True
-    if use_lock:
+    supports_advisory_lock = make_url(sqlalchemy_url).get_backend_name() == "postgresql"
+    if use_lock and supports_advisory_lock:
         try:
             acquired = await asyncio.to_thread(_acquire_advisory_lock_sync, sqlalchemy_url, lock_key, lock_wait_seconds)
         except Exception as exc:
@@ -120,7 +120,7 @@ async def run_migrations_with_lock(
     except Exception as exc:
         return False, f"migration failed: {exc}"
     finally:
-        if use_lock:
+        if use_lock and supports_advisory_lock:
             try:
                 await asyncio.to_thread(_release_advisory_lock_sync, sqlalchemy_url, lock_key)
             except Exception:

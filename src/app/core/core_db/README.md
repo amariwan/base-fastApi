@@ -4,6 +4,11 @@
 lifecycle, and Alembic startup helpers. The application lifespan decides when
 startup work runs; importing database modules must not open a connection.
 
+Set `DB_BACKEND` to `postgresql`, `mysql`, or `sqlite`. The URL builder selects
+`asyncpg`/`psycopg`, `asyncmy`/`pymysql`, or `aiosqlite`/`pysqlite` for async
+runtime and synchronous Alembic operations respectively. PostgreSQL advisory
+migration locks are automatically skipped for MySQL and SQLite.
+
 `startup_migrations.py` contains revision inspection and advisory-lock
 coordination. `startup_checks.py` remains the application-level orchestrator
 that combines database and storage probes with migration policy. The old

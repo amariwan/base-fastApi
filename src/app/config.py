@@ -119,6 +119,7 @@ class DbSettings(BaseSettings):
     # Defaulting to False makes the application easier to run in environments
     # that don't provide a database (local/dev/test). Enable via env var when needed.
     DB_ENABLED: bool = False
+    DB_BACKEND: Literal["postgresql", "mysql", "sqlite"] = "postgresql"
     DB_PORT: int | None = None
     DB_USERNAME: str | None = None
     DB_PASSWORD: str | None = None
@@ -150,11 +151,16 @@ def get_db_settings() -> DbSettings:
         db_settings = DbSettings()
         # Validate required DB values only when DB is enabled
         if db_settings.DB_ENABLED:
-            missing = [
-                name
-                for name in ("DB_PORT", "DB_USERNAME", "DB_PASSWORD", "DB_DATABASE")
-                if getattr(db_settings, name) in (None, "")
-            ]
+            required = (
+                ("DB_DATABASE",)
+                if db_settings.DB_BACKEND == "sqlite"
+                else (
+                    "DB_USERNAME",
+                    "DB_PASSWORD",
+                    "DB_DATABASE",
+                )
+            )
+            missing = [name for name in required if getattr(db_settings, name) in (None, "")]
             if missing:
                 raise SystemExit("CRITICAL ERROR: DB is enabled but missing variables: " + ", ".join(missing))
     except Exception as e:

@@ -3,8 +3,6 @@ import logging
 from collections.abc import Mapping
 from typing import Protocol, cast
 
-from fastapi import APIRouter, Request, Response
-
 from app.config import get_app_settings, get_db_settings
 from app.core.core_auth.settings import get_auth_settings
 from app.core.core_extensions.loader import RuntimeService, ServiceRegistration
@@ -12,6 +10,7 @@ from app.core.core_storage.settings import StorageBackend, get_storage_settings
 from app.core.startup_checks import check_db
 from app.core.startup_checks import check_s3 as check_storage
 from app.shared.jobs.providers import get_arq_pool
+from fastapi import APIRouter, Request, Response
 
 from .health_diagnostics import health_status, make_health_result, service_startup_states
 from .schemas import (
@@ -50,7 +49,11 @@ def _serialize_health_config() -> HealthConfig | None:
         {"LOG_LEVEL": app_settings.LOG_LEVEL.value, "TEST_MODE": app_settings.TEST_MODE}
     )
     db_config = HealthSettingsDB.model_validate(
-        {"DB_PORT": cast(int, db_settings.DB_PORT), "DB_DATABASE": cast(str, db_settings.DB_DATABASE)}
+        {
+            "DB_BACKEND": db_settings.DB_BACKEND,
+            "DB_PORT": db_settings.DB_PORT,
+            "DB_DATABASE": cast(str, db_settings.DB_DATABASE),
+        }
     )
     return HealthConfig.model_validate({"APP_SETTINGS": app_config, "DB_SETTINGS": db_config})
 
@@ -103,9 +106,10 @@ async def _check_database() -> HealthCheckResult:
         "ok" if ok else "fail",
         "database probe ok" if ok else f"database probe failed: {message}",
         details={
+            "backend": db_settings.DB_BACKEND,
             "database": cast(str, db_settings.DB_DATABASE),
             "enabled": True,
-            "port": cast(int, db_settings.DB_PORT),
+            "port": db_settings.DB_PORT,
             "timeout_seconds": app_settings.DB_PROBE_TIMEOUT_SECONDS,
         },
     )

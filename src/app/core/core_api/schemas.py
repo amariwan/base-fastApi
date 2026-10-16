@@ -28,7 +28,8 @@ class HealthSettingsDB(BaseModel):
 
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
 
-    port: StrictInt = Field(..., alias="DB_PORT", ge=0)
+    backend: StrictStr = Field(default="postgresql", alias="DB_BACKEND")
+    port: StrictInt | None = Field(default=None, alias="DB_PORT", ge=0)
     database: StrictStr = Field(..., alias="DB_DATABASE")
 
 

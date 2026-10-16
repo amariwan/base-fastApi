@@ -13,12 +13,15 @@ depend on core modules; core modules must not import feature services.
 | `core_auth` | JWT identity, role authorization, and ACL checks | Auth dependencies expose normalized claims |
 | `core_ai` | Optional AI providers, inference, retrieval, agents, MCP, and evaluations | Lazy, internal, policy-controlled; no public router |
 | `core_cache` | Small in-process TTL cache | No backend abstraction without a second real backend |
+| `core_channels` | Optional in-process or Redis Pub/Sub for WebSockets | No channel connection until explicitly enabled and requested |
 | `core_db` | SQLAlchemy base, URLs, sessions, and migration coordination | Session/engine ownership is explicit |
+| `core_email` | Direct SMTP/console delivery plus optional Celery enqueueing | Queue failures fall back to direct delivery |
 | `core_extensions` | Service discovery, registration, and lifecycle hooks | Registration is deterministic and observable |
 | `core_logging` | Logging adapters, formatting, and journey diagnostics | Provider code uses stdlib-compatible loggers |
 | `core_messages` | Message catalogs and request locale resolution | Missing startup catalogs are configuration errors |
 | `core_middleware` | Composable HTTP middleware registration | Middleware does not orchestrate business services |
 | `core_storage` | Provider-independent file storage contract and providers | Callers use `StorageClient`, not SDKs |
+| `core_users` | Local email identity model, password hashing, and user lifecycle | UserManager flushes; calling use case owns commit |
 | `startup_checks.py` | Startup probes and migration orchestration | Invoked by the application lifespan |
 
 ## Dependency rules

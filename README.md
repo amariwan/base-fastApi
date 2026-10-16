@@ -24,7 +24,11 @@ Dieses Template bietet einen sofort einsatzbereiten Ausgangspunkt für die Entwi
 | **Error Handling**          | Globale Exception-Handler mit strukturierten Responses        |
 | **Health Checks**           | `/health`, `/ready`, `/metrics` Endpunkte                     |
 | **Scheduler**               | APScheduler für Hintergrundaufgaben                           |
-| **Datenbank**               | SQLAlchemy 2.0 + Alembic Migrationen (PostgreSQL-ready)       |
+| **Datenbank**               | SQLAlchemy/Alembic für PostgreSQL, MySQL und SQLite            |
+| **Benutzer**                | E-Mail-basierter Core User mit erweiterbarem UserManager      |
+| **E-Mail**                  | SMTP/Console, optional Celery mit direktem Fallback            |
+| **Caching**                 | In-Memory, optional Redis                                     |
+| **WebSockets**              | Optionale In-Memory- oder Redis-Channels                      |
 | **Logging**                 | Strukturiertes JSON-Logging mit Correlation IDs               |
 | **Monitoring**              | Prometheus Metrics + OpenAPI Docs (`/docs`, `/redoc`)         |
 | **Testing**                 | Pytest + HTTPX mit Test-Datenbank                             |

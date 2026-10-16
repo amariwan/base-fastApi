@@ -5,6 +5,10 @@ import functools
 from asyncio import AbstractEventLoop, get_running_loop
 from collections.abc import AsyncGenerator
 
+from app.config import get_db_settings
+from app.core.core_db.base import Base
+from app.core.core_db.connection import build_async_database_url
+from app.core.core_messages import MessageKeys, msg
 from sqlalchemy.ext.asyncio import (
     AsyncConnection,
     AsyncEngine,
@@ -12,11 +16,6 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
     create_async_engine,
 )
-
-from app.config import get_db_settings
-from app.core.core_db.base import Base
-from app.core.core_db.connection import build_async_database_url
-from app.core.core_messages import MessageKeys, msg
 
 
 class DatabaseSessionManager:
@@ -118,16 +117,17 @@ class DatabaseSessionManager:
 def get_sessionmanager() -> DatabaseSessionManager:
     db_settings = get_db_settings()
     connection_string = build_async_database_url(db_settings)
-    return DatabaseSessionManager(
-        connection_string,
-        engine_kwargs={
-            "echo": db_settings.DB_ENGINE_ECHO,
-            "pool_size": db_settings.DB_POOL_SIZE,
-            "max_overflow": db_settings.DB_MAX_OVERFLOW,
-            "pool_recycle": db_settings.DB_POOL_RECYCLE,
-            "pool_pre_ping": db_settings.DB_POOL_PRE_PING,
-        },
-    )
+    engine_kwargs: dict[str, object] = {
+        "echo": db_settings.DB_ENGINE_ECHO,
+        "pool_pre_ping": db_settings.DB_POOL_PRE_PING,
+    }
+    if db_settings.DB_BACKEND != "sqlite":
+        engine_kwargs.update(
+            pool_size=db_settings.DB_POOL_SIZE,
+            max_overflow=db_settings.DB_MAX_OVERFLOW,
+            pool_recycle=db_settings.DB_POOL_RECYCLE,
+        )
+    return DatabaseSessionManager(connection_string, engine_kwargs=engine_kwargs)
 
 
 async def get_db_session() -> AsyncGenerator[AsyncSession]:
@@ -145,6 +145,9 @@ async def ensure_db_schema() -> None:
     db_settings = get_db_settings()
     if not db_settings.DB_ENABLED or not db_settings.DB_AUTO_CREATE_TABLES:
         return
+
+    # Register built-in Core models without creating engines or connections at import time.
+    from app.core.core_users.model import User  # noqa: F401
 
     session_manager = get_sessionmanager()
     ensure_current_loop = getattr(session_manager, "_ensure_current_loop", None)

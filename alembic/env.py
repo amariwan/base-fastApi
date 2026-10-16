@@ -19,6 +19,7 @@ for path in (PROJECT_ROOT, APP_ROOT):
         sys.path.insert(0, path_str)
 from app.core.core_db.base import Base
 from app.core.core_db.connection import build_sync_database_url
+from app.core.core_users.model import User  # noqa: F401
 
 config = context.config
 

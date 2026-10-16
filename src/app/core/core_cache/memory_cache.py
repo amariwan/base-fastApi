@@ -47,11 +47,12 @@ class MemoryTTLCache[K, V]:
             self._entries.move_to_end(key)
             return entry.value
 
-    def set(self, key: K, value: V) -> V:
+    def set(self, key: K, value: V, *, ttl_seconds: int | None = None) -> V:
         if not self._enabled:
             return value
 
-        expires_at = self._time_fn() + self._ttl_seconds
+        ttl = self._ttl_seconds if ttl_seconds is None else max(0, ttl_seconds)
+        expires_at = self._time_fn() + ttl
         with self._lock:
             self._entries[key] = _CacheEntry(value=value, expires_at=expires_at)
             self._entries.move_to_end(key)

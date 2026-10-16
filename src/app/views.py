@@ -8,6 +8,9 @@ from app.config import get_app_settings, get_db_settings
 from app.core.core_api.healthcheck import healthcheck_router
 from app.core.core_api.runtime_config import runtime_config_router
 from app.core.core_api.whoami import whoami_router
+from app.core.core_cache import close_cache
+from app.core.core_channels import close_channel_layer
+from app.core.core_email import close_email_dispatcher
 from app.core.core_extensions.loader import (
     get_service_registrations,
     register_service_routers,
@@ -80,6 +83,16 @@ async def lifespan(app: FastAPI):
             await run_service_shutdown(app, getattr(app.state, "runtime_services", []))
         except Exception:
             logger.exception("Service shutdown failed")
+
+        for name, close_resource in (
+            ("cache", close_cache),
+            ("channels", close_channel_layer),
+            ("email", close_email_dispatcher),
+        ):
+            try:
+                await close_resource()
+            except Exception:
+                logger.exception("Core %s shutdown failed", name)
 
         logger.info("Shutdown complete")
 
