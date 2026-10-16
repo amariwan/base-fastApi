@@ -26,6 +26,11 @@ modular-monolith
 ai-agents
 pydantic-ai
 ollama
+asyncio
+rest-api
+uv
+pytest
+open-source
 ```
 
 ## One-line pitch

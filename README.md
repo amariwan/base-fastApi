@@ -6,7 +6,6 @@ A production-minded FastAPI foundation for teams that need more than a demo scaf
 
 [![Python 3.12+](https://img.shields.io/badge/Python-3.12%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115%2B-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![CI](https://github.com/amariwan/base-fastApi/actions/workflows/ci.yml/badge.svg)](https://github.com/amariwan/base-fastApi/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-F5C518.svg)](LICENSE)
 
 > Start as a modular monolith. Preserve the boundaries that let services evolve independently later.
@@ -77,6 +76,12 @@ flowchart LR
 ```
 
 The dependency rule is simple: business logic does not depend on FastAPI, SQLAlchemy, provider SDKs, or concrete infrastructure. Services consume stable Core contracts through their own application ports.
+
+### Architecture gallery
+
+- [System architecture](docs/diagrams/system-architecture.html) — how requests cross the FastAPI boundary into feature-owned services and reusable Core capabilities.
+- [Request lifecycle](docs/diagrams/request-lifecycle.html) — where transport, authorization, business policy, and infrastructure ownership change hands.
+- [AI safety layers](docs/diagrams/ai-safety-layers.html) — the enforcement surfaces that keep provider access, tools, data movement, and telemetry bounded.
 
 ```text
 src/app/
@@ -166,7 +171,7 @@ just test-cov           # coverage report and 75% gate
 just check              # complete local quality gate
 ```
 
-The repository uses pytest, Ruff, Mypy, Pyright, GitHub Actions, GitLab CI, `uv`, and `just`. External AI/model integrations remain opt-in so normal tests do not require credentials or a running model server.
+The local quality workflow uses pytest, Ruff, Mypy, Pyright, `uv`, and `just`. External AI/model integrations remain opt-in so normal tests do not require credentials or a running model server.
 
 ## Honest boundaries
 
