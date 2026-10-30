@@ -1,47 +1,5 @@
-"""Cache backend settings."""
+"""Compatibility imports; implementation lives in base_fastapi_core."""
 
-from __future__ import annotations
-
-from enum import StrEnum
-from functools import lru_cache
-
-from pydantic import Field, model_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
-
-
-class CacheBackend(StrEnum):
-    MEMORY = "memory"
-    REDIS = "redis"
-
-
-class CacheSettings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=(".env", ".env.dev"), case_sensitive=False, extra="ignore")
-
-    CACHE_ENABLED: bool = True
-    CACHE_BACKEND: CacheBackend = CacheBackend.MEMORY
-    CACHE_DEFAULT_TTL_SECONDS: int = Field(default=300, ge=1)
-    CACHE_MAX_ENTRIES: int = Field(default=1024, ge=1)
-    CACHE_KEY_PREFIX: str = "app"
-    CACHE_REDIS_URL: str | None = None
-
-    @model_validator(mode="after")
-    def validate_redis(self) -> CacheSettings:
-        if self.CACHE_BACKEND is CacheBackend.REDIS and not self.CACHE_REDIS_URL:
-            raise ValueError("CACHE_REDIS_URL is required for the Redis cache backend")
-        return self
-
-    @property
-    def ENABLED(self) -> bool:  # noqa: N802
-        return self.CACHE_ENABLED
-
-    @property
-    def enabled(self) -> bool:
-        return self.CACHE_ENABLED
-
-
-@lru_cache(maxsize=1)
-def get_cache_settings() -> CacheSettings:
-    return CacheSettings()
-
+from base_fastapi_core.cache.settings import CacheBackend, CacheSettings, get_cache_settings
 
 __all__ = ["CacheBackend", "CacheSettings", "get_cache_settings"]

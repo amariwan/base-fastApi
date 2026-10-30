@@ -1,0 +1,45 @@
+name: Core Package
+
+on:
+  pull_request:
+    paths:
+      - "packages/base-fastapi-core/**"
+      - "src/app/core/core_cache/**"
+      - "pyproject.toml"
+      - "uv.lock"
+      - ".github/workflows/core-package.yml"
+  push:
+    branches: [master]
+    paths:
+      - "packages/base-fastapi-core/**"
+      - "src/app/core/core_cache/**"
+      - "pyproject.toml"
+      - "uv.lock"
+      - ".github/workflows/core-package.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Package, compatibility and wheel
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+      - run: uv python install 3.12
+      - name: Library tests
+        run: uv run --locked --package base-fastapi-core --group dev pytest packages/base-fastapi-core/tests -q
+      - name: Legacy cache compatibility
+        run: PYTHONPATH=src uv run --locked --package base-fastapi-core --group dev pytest src/app/core/core_cache -q
+      - name: Ruff and formatting
+        run: |
+          uv run --locked --package base-fastapi-core --group dev ruff check packages/base-fastapi-core/src packages/base-fastapi-core/tests src/app/core/core_cache
+          uv run --locked --package base-fastapi-core --group dev ruff format --check packages/base-fastapi-core/src packages/base-fastapi-core/tests src/app/core/core_cache
+      - name: Type check
+        run: uv run --locked --package base-fastapi-core --group dev mypy packages/base-fastapi-core/src
+      - name: Build distributions
+        run: uv build --package base-fastapi-core
+      - name: Install wheel without host app
+        run: |
+          uv run --no-project --with ./dist/base_fastapi_core-0.1.0-py3-none-any.whl python -c "from base_fastapi_core.cache import MemoryTTLCache; assert MemoryTTLCache[str, str](ttl_seconds=5).get('missing') is None"
